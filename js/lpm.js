@@ -365,6 +365,9 @@ var lpm = (function () {
   // save passwords to json file
   function savePasswords() {
 
+    // sort array
+    passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); })
+
     encryptPasswords();
 
     fs.writeFile('passwords.json', JSON.stringify(passwords), 'utf8');
