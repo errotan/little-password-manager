@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Little Password Manager</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="css/lpm.css">
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/crypto-js.js"></script>
+<script src="js/lpm.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <h3 class="page-title"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Little Password Manager</h3>
+    <form>
+        <div class="row">
+            <div class="col-xs-3 js-form-side"></div>
+            <div class="col-xs-4 small-padding">
+                <input class="form-control" type="password" id="loginpassword" placeholder="Password" />
+            </div>
+            <div class="col-xs-4 small-padding hidden js-password-again">
+                <input class="form-control" type="password" id="loginpassword2" placeholder="Password again" />
+            </div>
+            <div class="col-xs-2 small-padding">
+                <input class="form-control btn btn-primary" id="loginsubmit" type="submit" value="Unlock" />
+            </div>
+            <div class="col-xs-3 js-form-side"></div>
+        </div>
+    </form>
+    <form>
+        <table class="table hidden">
+            <thead>
+                <tr>
+                    <th>Web page or application</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input class="form-control" type="text" placeholder="web page" />
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" placeholder="username" />
+                    </td>
+                    <td>
+                        <input class="form-control" type="text" placeholder="password" />
+                    </td>
+                    <td>
+                        <input class="form-control btn btn-primary" type="submit" value="Store" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+</body>
+</html>

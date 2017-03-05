@@ -1,0 +1,17 @@
+{
+  "main": "index.html",
+  "name": "little-password-manager",
+  "description": "Little password manager using NW.js",
+  "version": "0.1",
+  "author": {
+    "name" : "Puskás Zsolt",
+    "email" : "errotan@gmail.com"
+  },
+  "license" : "MIT",
+  "window": {
+    "min_width": 510,
+    "min_height": 410,
+    "width": 510,
+    "height": 410
+  }
+}
