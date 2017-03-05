@@ -8,6 +8,6 @@ This application let's you store your passwords in one place and protect them fr
 
 Download [NW.js](https://nwjs.io/downloads/) for your platform, extract to this directory and run the nw executable.
 
-### Author / License
+### License
 
-Puskás Zsolt <errotan@gmail.com> / [MIT](https://en.wikipedia.org/wiki/MIT_License)
+LPM is available under the [MIT license](https://en.wikipedia.org/wiki/MIT_License) .
