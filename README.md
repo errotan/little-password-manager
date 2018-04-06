@@ -17,3 +17,8 @@ This application let's you store your passwords in one place and protect them fr
 ### License
 
 LPM is available under the [MIT license](LICENSE)
+
+### Screenshots
+
+![Screenshot 1](screenshot1.png)
+![Screenshot 2](screenshot2.png)
