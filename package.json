@@ -1,13 +1,27 @@
 {
-  "main": "index.html",
   "name": "little-password-manager",
-  "description": "Little password manager using NW.js",
+  "description": "Little password manager",
   "version": "0.1.0",
+  "license": "MIT",
+  "keywords": [
+    "password-manager",
+    "nwjs-application"
+  ],
   "author": {
-    "name" : "Puskás Zsolt",
-    "email" : "errotan@gmail.com"
+    "name": "Puskás Zsolt",
+    "email": "errotan@gmail.com"
   },
-  "license" : "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/errotan/little-password-manager.git"
+  },
+  "dependencies": {
+    "nw": "*"
+  },
+  "scripts": {
+    "start": "nw"
+  },
+  "main": "index.html",
   "window": {
     "min_width": 510,
     "min_height": 410,
