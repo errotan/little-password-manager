@@ -16,6 +16,8 @@
     "url": "https://github.com/errotan/little-password-manager.git"
   },
   "dependencies": {
+    "jquery": "^3.0",
+    "crypto-js": "^3.0",
     "nw": "*"
   },
   "scripts": {
