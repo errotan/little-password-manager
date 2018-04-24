@@ -9,7 +9,7 @@ This application let's you store your passwords in one place and protect them fr
 1. install [Node.js](https://nodejs.org/)
 2. download this repository to a directory
 3. then run `npm install` to install dependencies and
-4. use `npm start` to run the app
+4. use `npm start` to run the app (to start without console at windows dblclick on `windows.vbs`)
 
 ### Screenshots
 
