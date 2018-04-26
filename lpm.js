@@ -126,7 +126,7 @@ function passwordCheck() {
 
   if (typeof passwords.list !== 'undefined' && passwords.list.length) {
 
-    return CryptoJS.AES.decrypt(passwords.list[0].pw, mainPassword).toString(CryptoJS.enc.Utf8).length;
+    return decryptString(passwords.list[0].pw).length;
 
   }
 }
@@ -175,7 +175,7 @@ function loginHandler() {
       // check password
       if (passwordCheck()) {
 
-        decryptPasswords();
+        decryptRows();
 
         // clear password field
         loginPassword.value = '';
@@ -349,56 +349,68 @@ function savePasswords() {
   // sort array
   passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); })
 
-  encryptPasswords();
+  encryptRows();
 
   fs.writeFile('passwords.json', JSON.stringify(passwords), 'utf8');
 
-  decryptPasswords();
+  decryptRows();
 
   drawPasswordList();
 
 }
 
-// encrypt passwords
-function encryptPasswords() {
+// encrypt entry
+function encryptEntry(id, index) {
 
-  for (var i = 0; i < passwords.list.length; i++) {
+  if (passwords.list[id][index].length > 0) {
 
-    if (passwords.list[i].web.length > 0) {
+    passwords.list[id][index] = CryptoJS.AES.encrypt(passwords.list[id][index], mainPassword).toString();
 
-      passwords.list[i].web = CryptoJS.AES.encrypt(passwords.list[i].web, mainPassword).toString();
+  } else {
 
-    }
-
-    if (passwords.list[i].un.length > 0) {
-
-      passwords.list[i].un = CryptoJS.AES.encrypt(passwords.list[i].un, mainPassword).toString();
-
-    }
-
-    passwords.list[i].pw = CryptoJS.AES.encrypt(passwords.list[i].pw, mainPassword).toString();
+    passwords.list[id][index] = '';
 
   }
 }
 
-// decrypt passwords
-function decryptPasswords() {
+// encrypt row
+function encryptRows() {
 
   for (var i = 0; i < passwords.list.length; i++) {
 
-    if (passwords.list[i].web.length > 0) {
+    encryptEntry(i, 'web');
+    encryptEntry(i, 'un');
+    encryptEntry(i, 'pw');
 
-      passwords.list[i].web = CryptoJS.AES.decrypt(passwords.list[i].web, mainPassword).toString(CryptoJS.enc.Utf8);
+  }
+}
 
-    }
+// decrypt string
+function decryptString(string) {
+  return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
+}
 
-    if (passwords.list[i].un.length > 0) {
+// decrypt entry
+function decryptEntry(id, index) {
 
-      passwords.list[i].un = CryptoJS.AES.decrypt(passwords.list[i].un, mainPassword).toString(CryptoJS.enc.Utf8);
+  if (passwords.list[id][index].length > 0) {
 
-    }
+    passwords.list[id][index] = decryptString(passwords.list[id][index]);
 
-    passwords.list[i].pw = CryptoJS.AES.decrypt(passwords.list[i].pw, mainPassword).toString(CryptoJS.enc.Utf8);
+  }
+
+  return passwords.list[id][index];
+
+}
+
+// decrypt row
+function decryptRows() {
+
+  for (var i = 0; i < passwords.list.length; i++) {
+
+    decryptEntry(i, 'web');
+    decryptEntry(i, 'un');
+    decryptEntry(i, 'pw');
 
   }
 }
@@ -406,44 +418,28 @@ function decryptPasswords() {
 // password again shower/hider for first time run
 function passwordAgain() {
 
-  var passwordDiv = document.getElementsByClassName('js-password-again').item(0);
-  var sideDivs    = document.getElementsByClassName('js-form-side');
-  var loginSubmit = document.getElementById('loginsubmit');
+  var passwordDiv        = document.getElementsByClassName('js-password-again').item(0);
+  var sideDivs           = document.getElementsByClassName('js-form-side');
+  var loginSubmit        = document.getElementById('loginsubmit');
+  var passwordFileExists = fs.existsSync('passwords.json');
 
-  // check password file existance
-  if ( ! fs.existsSync('passwords.json')) {
+  if (passwordFileExists) {
 
-    // not present, change to first time password set mode
-
-    // unhide password again input field
-    passwordDiv.classList.remove('hidden');
-
-    // change side divs to smaller
-    sideDivs[0].classList.remove('col-xs-3');
-    sideDivs[0].classList.add('col-xs-1');
-    sideDivs[1].classList.remove('col-xs-3');
-    sideDivs[1].classList.add('col-xs-1');
-
-    // change submit button text
-    loginSubmit.value = 'Create';
+    passwordDiv.classList.add('hidden');
 
   } else {
 
-    // present, change to normal mode
-
-    // unhide password again input field
-    passwordDiv.classList.add('hidden');
-
-    // change side divs to bigger
-    sideDivs[0].classList.remove('col-xs-1');
-    sideDivs[0].classList.add('col-xs-3');
-    sideDivs[1].classList.remove('col-xs-1');
-    sideDivs[1].classList.add('col-xs-3');
-
-    // change submit button text
-    loginSubmit.value = 'Unlock';
+    passwordDiv.classList.remove('hidden');
 
   }
+
+  sideDivs[0].classList.remove('col-xs-' + (passwordFileExists ? '1' : '3'));
+  sideDivs[0].classList.add('col-xs-' + (passwordFileExists ? '3' : '1'));
+  sideDivs[1].classList.remove('col-xs-' + (passwordFileExists ? '1' : '3'));
+  sideDivs[1].classList.add('col-xs-' + (passwordFileExists ? '3' : '1'));
+
+  loginSubmit.value = passwordFileExists ? 'Unlock' : 'Create';
+
 }
 
 // logout handler
