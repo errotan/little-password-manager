@@ -30,7 +30,13 @@ function setDocument(doc) {
 function init() {
 
   attachWindowHandlers();
-  passwordAgain();
+  passwordAgainFieldHandler();
+  addListeners();
+
+}
+
+// add event listeners
+function addListeners() {
 
   // option event listener
   document.addEventListener('click', function(e) {
@@ -416,7 +422,7 @@ function decryptRows() {
 }
 
 // password again shower/hider for first time run
-function passwordAgain() {
+function passwordAgainFieldHandler() {
 
   var passwordDiv        = document.getElementsByClassName('js-password-again').item(0);
   var sideDivs           = document.getElementsByClassName('js-form-side');
@@ -480,7 +486,7 @@ function attachWindowHandlers() {
   // lock on minimize 
   win.on('minimize', function() {
 
-    passwordAgain();
+    passwordAgainFieldHandler();
     logout();
 
   });
