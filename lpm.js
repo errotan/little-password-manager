@@ -38,67 +38,60 @@ function init() {
 // add event listeners
 function addListeners() {
 
-  // option event listener
+  // click handlers
   document.addEventListener('click', function(e) {
 
     // show/hide event
-    if (e.srcElement.classList.contains('glyphicon-eye-open') || e.srcElement.classList.contains('glyphicon-eye-close')) {
+    if (e.target.classList.contains('glyphicon-eye-open') || e.target.classList.contains('glyphicon-eye-close')) {
 
-      showHidePassword(e.srcElement);
+      showHidePassword(e.target);
 
     }
 
     // edit event
-    if (e.srcElement.classList.contains('glyphicon-pencil')) {
+    if (e.target.classList.contains('glyphicon-pencil')) {
 
-      editPassword(e.srcElement);
+      editPassword(e.target);
 
     }
 
     // edit finish event
-    if (e.srcElement.classList.contains('glyphicon-ok')) {
+    if (e.target.classList.contains('glyphicon-ok')) {
 
-      saveEditedPassword(e.srcElement);
+      saveEditedPassword(e.target);
 
     }
 
     // edit cancel event
-    if (e.srcElement.classList.contains('glyphicon-remove')) {
+    if (e.target.classList.contains('glyphicon-remove')) {
 
       drawPasswordList();
 
     }
 
     // delete event
-    if (e.srcElement.classList.contains('glyphicon-trash')) {
+    if (e.target.classList.contains('glyphicon-trash')) {
 
-      deletePassword(e.srcElement);
+      deletePassword(e.target);
 
     }
   });
 
-  var forms = document.getElementsByTagName('form');
-
-  // add login submit event listener
-  forms.item(0).addEventListener('submit', function(e) {
+  // form submit handlers
+  document.addEventListener('submit', function(e) {
 
     // prevent page navigation
     e.preventDefault();
 
-    // login handler
-    loginHandler();
+    if (typeof e.target.dataset.login !== 'undefined') {
 
-  });
+      loginHandler();
 
-  // add new password save event listener
-  forms.item(1).addEventListener('submit', function(e) {
+    } else {
 
-    // prevent page navigation
-    e.preventDefault();
+      saveNewPassword();
 
-    // new password save handler
-    saveNewPassword();
-
+    }
   });
 }
 
@@ -365,6 +358,18 @@ function savePasswords() {
 
 }
 
+// encrypt rows
+function encryptRows() {
+
+  for (var i = 0; i < passwords.list.length; i++) {
+
+    encryptEntry(i, 'web');
+    encryptEntry(i, 'un');
+    encryptEntry(i, 'pw');
+
+  }
+}
+
 // encrypt entry
 function encryptEntry(id, index) {
 
@@ -379,21 +384,16 @@ function encryptEntry(id, index) {
   }
 }
 
-// encrypt row
-function encryptRows() {
+// decrypt rows
+function decryptRows() {
 
   for (var i = 0; i < passwords.list.length; i++) {
 
-    encryptEntry(i, 'web');
-    encryptEntry(i, 'un');
-    encryptEntry(i, 'pw');
+    decryptEntry(i, 'web');
+    decryptEntry(i, 'un');
+    decryptEntry(i, 'pw');
 
   }
-}
-
-// decrypt string
-function decryptString(string) {
-  return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
 }
 
 // decrypt entry
@@ -409,16 +409,9 @@ function decryptEntry(id, index) {
 
 }
 
-// decrypt row
-function decryptRows() {
-
-  for (var i = 0; i < passwords.list.length; i++) {
-
-    decryptEntry(i, 'web');
-    decryptEntry(i, 'un');
-    decryptEntry(i, 'pw');
-
-  }
+// decrypt string
+function decryptString(string) {
+  return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
 }
 
 // password again shower/hider for first time run
