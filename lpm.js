@@ -1,23 +1,23 @@
 //! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 // nw instance
-var win;
+let win;
 
 // DOM instance
-var document;
+let document;
 
 // main password used for encryption/decryption
-var mainPassword = '';
+let mainPassword = '';
 
 // this object holds all passwords
-var passwords = {};
+let passwords = {};
 
 // get vendor libs
-var fs       = require('fs');
-var CryptoJS = require('crypto-js');
+let fs       = require('fs');
+let CryptoJS = require('crypto-js');
 
 // set Nw
-function setNw(nw) {
+function setWin(nw) {
   win = nw;
 }
 
@@ -99,7 +99,7 @@ function addListeners() {
 function readPasswordFile() {
 
   // load password file
-  var data = fs.readFileSync('passwords.json', 'utf8').toString();
+  let data = fs.readFileSync('passwords.json', 'utf8').toString();
 
   // try json parse
   try {
@@ -133,14 +133,14 @@ function passwordCheck() {
 // login handler
 function loginHandler() {
 
-  var loginPassword = document.getElementById('loginpassword');
+  let loginPassword = document.getElementById('loginpassword');
 
   // save password
   mainPassword = loginPassword.value;
 
   if ( ! fs.existsSync('passwords.json')) {
 
-    var loginPassword2 = document.getElementById('loginpassword2');
+    let loginPassword2 = document.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
 
@@ -203,21 +203,21 @@ function drawPasswordList() {
   clearMainTable();
 
   // show password list table
-  var mainTable = document.getElementsByTagName('table').item(0);
+  let mainTable = document.getElementsByTagName('table').item(0);
 
   mainTable.classList.remove('hidden');
 
   if (typeof passwords.list !== 'undefined') {
 
-    var mainTableBody = mainTable.getElementsByTagName('tbody').item(0);
+    let mainTableBody = mainTable.getElementsByTagName('tbody').item(0);
 
-    for (var i = 0; i < passwords.list.length; i++) {
+    for (let i = 0; i < passwords.list.length; i++) {
 
-      var row   = mainTableBody.insertRow(i);
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
+      let row   = mainTableBody.insertRow(i);
+      let cell1 = row.insertCell(0);
+      let cell2 = row.insertCell(1);
+      let cell3 = row.insertCell(2);
+      let cell4 = row.insertCell(3);
 
       // center option icons
       cell4.classList.add('text-center');
@@ -244,7 +244,7 @@ function drawPasswordList() {
 // password shower
 function showHidePassword(element) {
 
-  var tr = element.parentElement.parentElement;
+  let tr = element.parentElement.parentElement;
 
   if (element.classList.contains('glyphicon-eye-open')) {
 
@@ -266,7 +266,7 @@ function showHidePassword(element) {
 // make input fields for password row edit
 function editPassword(element) {
 
-  var tr = element.parentElement.parentElement;
+  let tr = element.parentElement.parentElement;
 
   tr.cells.item(0).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.web + '" />';
   tr.cells.item(1).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.un + '" />';
@@ -281,8 +281,8 @@ function saveEditedPassword(element) {
 
   if (confirm('Do you really want to save this data?')) {
 
-    var tr  = element.parentElement.parentElement;
-    var id  = tr.dataset.id;
+    let tr  = element.parentElement.parentElement;
+    let id  = tr.dataset.id;
 
     passwords.list[id].web = tr.getElementsByTagName('input').item(0).value;
     passwords.list[id].un  = tr.getElementsByTagName('input').item(1).value;
@@ -313,7 +313,7 @@ function deletePassword(element) {
 // new password save handler
 function saveNewPassword() {
 
-  var inputFields = document.getElementsByTagName('table').item(0).getElementsByTagName('input');
+  let inputFields = document.getElementsByTagName('table').item(0).getElementsByTagName('input');
 
   if ((inputFields[0].value !== '' || inputFields[1].value !== '') && inputFields[2].value) {
 
@@ -361,7 +361,7 @@ function savePasswords() {
 // encrypt or decrypt rows
 function processRows(type) {
 
-  for (var i = 0; i < passwords.list.length; i++) {
+  for (let i = 0; i < passwords.list.length; i++) {
 
     if (type === 'encrypt') {
 
@@ -414,10 +414,10 @@ function decryptString(string) {
 // password again shower/hider for first time run
 function passwordAgainFieldHandler() {
 
-  var passwordDiv        = document.getElementsByClassName('js-password-again').item(0);
-  var sideDivs           = document.getElementsByClassName('js-form-side');
-  var loginSubmit        = document.getElementById('loginsubmit');
-  var passwordFileExists = fs.existsSync('passwords.json');
+  let passwordDiv        = document.getElementsByClassName('js-password-again').item(0);
+  let sideDivs           = document.getElementsByClassName('js-form-side');
+  let loginSubmit        = document.getElementById('loginsubmit');
+  let passwordFileExists = fs.existsSync('passwords.json');
 
   if (passwordFileExists) {
 
@@ -445,7 +445,7 @@ function logout() {
   document.getElementsByTagName('form').item(0).classList.remove('hidden');
 
   // hide password list table
-  var mainTable = document.getElementsByTagName('table').item(0);
+  let mainTable = document.getElementsByTagName('table').item(0);
 
   mainTable.classList.add('hidden');
 
@@ -460,10 +460,10 @@ function logout() {
 // clear password list table
 function clearMainTable() {
 
-  var mainTableTbody = document.getElementsByTagName('table').item(0).getElementsByTagName('tbody').item(0);
-  var passwordRows   = mainTableTbody.getElementsByTagName('tr');
+  let mainTableTbody = document.getElementsByTagName('table').item(0).getElementsByTagName('tbody').item(0);
+  let passwordRows   = mainTableTbody.getElementsByTagName('tr');
 
-  for (var i = passwordRows.length - 2; i >= 0; i--) {
+  for (let i = passwordRows.length - 2; i >= 0; i--) {
 
       mainTableTbody.removeChild(passwordRows[i]);
 
@@ -491,7 +491,7 @@ function attachWindowHandlers() {
 }
 
 module.exports = {
-  setNw: setNw,
+  setWin: setWin,
   setDocument: setDocument,
   init: init,
 }

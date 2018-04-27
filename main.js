@@ -7,10 +7,11 @@ if (typeof nw === 'undefined') {
   throw new Error('This application needs to be run in NW.js!');
 }
 
-var lpm = require('./lpm.js');
+let lpm = require('./lpm.js');
 
 // pass environment
-lpm.setNw(nw.Window.get());
+lpm.setWin(nw.Window.get());
 lpm.setDocument(document);
 
+// run init after page loaded
 document.addEventListener('DOMContentLoaded', function() { lpm.init(); });
