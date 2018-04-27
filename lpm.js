@@ -174,7 +174,7 @@ function loginHandler() {
       // check password
       if (passwordCheck()) {
 
-        decryptRows();
+        processRows('decrypt');
 
         // clear password field
         loginPassword.value = '';
@@ -348,25 +348,34 @@ function savePasswords() {
   // sort array
   passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); })
 
-  encryptRows();
+  processRows('encrypt');
 
   fs.writeFile('passwords.json', JSON.stringify(passwords), 'utf8');
 
-  decryptRows();
+  processRows('decrypt');
 
   drawPasswordList();
 
 }
 
-// encrypt rows
-function encryptRows() {
+// encrypt or decrypt rows
+function processRows(type) {
 
   for (var i = 0; i < passwords.list.length; i++) {
 
-    encryptEntry(i, 'web');
-    encryptEntry(i, 'un');
-    encryptEntry(i, 'pw');
+    if (type === 'encrypt') {
 
+      encryptEntry(i, 'web');
+      encryptEntry(i, 'un');
+      encryptEntry(i, 'pw');
+
+    } else {
+
+      decryptEntry(i, 'web');
+      decryptEntry(i, 'un');
+      decryptEntry(i, 'pw');
+  
+    }
   }
 }
 
@@ -380,18 +389,6 @@ function encryptEntry(id, index) {
   } else {
 
     passwords.list[id][index] = '';
-
-  }
-}
-
-// decrypt rows
-function decryptRows() {
-
-  for (var i = 0; i < passwords.list.length; i++) {
-
-    decryptEntry(i, 'web');
-    decryptEntry(i, 'un');
-    decryptEntry(i, 'pw');
 
   }
 }
