@@ -2,6 +2,9 @@
   "include": [
     "*.js"
   ],
+  "exclude": [
+    "main.js"
+  ],
   "cache": true,
   "all": true
 }
