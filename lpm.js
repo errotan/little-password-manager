@@ -350,7 +350,7 @@ function savePasswords() {
 
   processRows('encrypt');
 
-  fs.writeFile('passwords.json', JSON.stringify(passwords), 'utf8');
+  fs.writeFileSync('passwords.json', JSON.stringify(passwords), 'utf8');
 
   processRows('decrypt');
 
