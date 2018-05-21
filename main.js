@@ -7,7 +7,7 @@ if (typeof nw === 'undefined') {
   throw new Error('This application needs to be run in NW.js!');
 }
 
-let lpm = require('./lpm.js');
+const lpm = require('./lpm.js');
 
 // pass environment
 lpm.setWin(nw.Window.get());

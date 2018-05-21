@@ -4,7 +4,7 @@
 let win;
 
 // DOM instance
-let document;
+let dom;
 
 // main password used for encryption/decryption
 let mainPassword = '';
@@ -13,17 +13,17 @@ let mainPassword = '';
 let passwords = {};
 
 // get vendor libs
-let fs       = require('fs');
-let CryptoJS = require('crypto-js');
+const fs       = require('fs');
+const CryptoJS = require('crypto-js');
 
 // set Nw
 function setWin(nw) {
   win = nw;
 }
 
-// set document
+// set dom
 function setDocument(doc) {
-  document = doc;
+  dom = doc;
 }
 
 // init page
@@ -39,7 +39,7 @@ function init() {
 function addListeners() {
 
   // click handlers
-  document.addEventListener('click', function(e) {
+  dom.addEventListener('click', function(e) {
 
     // show/hide event
     if (e.target.classList.contains('glyphicon-eye-open') || e.target.classList.contains('glyphicon-eye-close')) {
@@ -78,7 +78,7 @@ function addListeners() {
   });
 
   // form submit handlers
-  document.addEventListener('submit', function(e) {
+  dom.addEventListener('submit', function(e) {
 
     // prevent page navigation
     e.preventDefault();
@@ -133,14 +133,14 @@ function passwordCheck() {
 // login handler
 function loginHandler() {
 
-  let loginPassword = document.getElementById('loginpassword');
+  let loginPassword = dom.getElementById('loginpassword');
 
   // save password
   mainPassword = loginPassword.value;
 
   if ( ! fs.existsSync('passwords.json')) {
 
-    let loginPassword2 = document.getElementById('loginpassword2');
+    let loginPassword2 = dom.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
 
@@ -197,13 +197,13 @@ function loginHandler() {
 function drawPasswordList() {
 
   // hide login form
-  document.getElementsByTagName('form').item(0).classList.add('hidden');
+  dom.getElementsByTagName('form').item(0).classList.add('hidden');
 
   // clear password list table
   clearMainTable();
 
   // show password list table
-  let mainTable = document.getElementsByTagName('table').item(0);
+  let mainTable = dom.getElementsByTagName('table').item(0);
 
   mainTable.classList.remove('hidden');
 
@@ -313,7 +313,7 @@ function deletePassword(element) {
 // new password save handler
 function saveNewPassword() {
 
-  let inputFields = document.getElementsByTagName('table').item(0).getElementsByTagName('input');
+  let inputFields = dom.getElementsByTagName('table').item(0).getElementsByTagName('input');
 
   if ((inputFields[0].value !== '' || inputFields[1].value !== '') && inputFields[2].value) {
 
@@ -414,9 +414,9 @@ function decryptString(string) {
 // password again shower/hider for first time run
 function passwordAgainFieldHandler() {
 
-  let passwordDiv        = document.getElementsByClassName('js-password-again').item(0);
-  let sideDivs           = document.getElementsByClassName('js-form-side');
-  let loginSubmit        = document.getElementById('loginsubmit');
+  let passwordDiv        = dom.getElementsByClassName('js-password-again').item(0);
+  let sideDivs           = dom.getElementsByClassName('js-form-side');
+  let loginSubmit        = dom.getElementById('loginsubmit');
   let passwordFileExists = fs.existsSync('passwords.json');
 
   if (passwordFileExists) {
@@ -442,10 +442,10 @@ function passwordAgainFieldHandler() {
 function logout() {
 
   // show login form
-  document.getElementsByTagName('form').item(0).classList.remove('hidden');
+  dom.getElementsByTagName('form').item(0).classList.remove('hidden');
 
   // hide password list table
-  let mainTable = document.getElementsByTagName('table').item(0);
+  let mainTable = dom.getElementsByTagName('table').item(0);
 
   mainTable.classList.add('hidden');
 
@@ -460,7 +460,7 @@ function logout() {
 // clear password list table
 function clearMainTable() {
 
-  let mainTableTbody = document.getElementsByTagName('table').item(0).getElementsByTagName('tbody').item(0);
+  let mainTableTbody = dom.getElementsByTagName('table').item(0).getElementsByTagName('tbody').item(0);
   let passwordRows   = mainTableTbody.getElementsByTagName('tr');
 
   for (let i = passwordRows.length - 2; i >= 0; i--) {
