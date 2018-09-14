@@ -1,0 +1,6 @@
+*      text eol=lf
+*.vbs  text eol=crlf
+*.png -text
+
+.gitattributes export-ignore
+.gitignore     export-ignore
