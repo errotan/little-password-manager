@@ -108,11 +108,9 @@ function readPasswordFile() {
 
   } catch (e) {
 
-    console.error('Password file is corrupted!');
+    alert('Fatal error! Password file is corrupted!');
 
-    alert('Password file is corrupted!');
-
-    return false;
+    throw new Error('Fatal error! Password file is corrupted!');
 
   }
 
@@ -346,7 +344,7 @@ function saveNewPassword() {
 function savePasswords() {
 
   // sort array
-  passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); })
+  passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); });
 
   processRows('encrypt');
 
@@ -465,7 +463,7 @@ function clearMainTable() {
 
   for (let i = passwordRows.length - 2; i >= 0; i--) {
 
-      mainTableTbody.removeChild(passwordRows[i]);
+    mainTableTbody.removeChild(passwordRows[i]);
 
   }
 }
@@ -494,4 +492,4 @@ module.exports = {
   setWin: setWin,
   setDocument: setDocument,
   init: init,
-}
+};
