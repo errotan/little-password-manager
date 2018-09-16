@@ -42,35 +42,35 @@ function addListeners() {
   dom.addEventListener('click', function(e) {
 
     // show/hide event
-    if (e.target.classList.contains('glyphicon-eye-open') || e.target.classList.contains('glyphicon-eye-close')) {
+    if (e.target.classList.contains('ion-md-eye') || e.target.classList.contains('ion-md-eye-off')) {
 
       showHidePassword(e.target);
 
     }
 
     // edit event
-    if (e.target.classList.contains('glyphicon-pencil')) {
+    if (e.target.classList.contains('ion-md-create')) {
 
       editPassword(e.target);
 
     }
 
     // edit finish event
-    if (e.target.classList.contains('glyphicon-ok')) {
+    if (e.target.classList.contains('ion-md-checkmark')) {
 
       saveEditedPassword(e.target);
 
     }
 
     // edit cancel event
-    if (e.target.classList.contains('glyphicon-remove')) {
+    if (e.target.classList.contains('ion-md-close')) {
 
       drawPasswordList();
 
     }
 
     // delete event
-    if (e.target.classList.contains('glyphicon-trash')) {
+    if (e.target.classList.contains('ion-md-trash')) {
 
       deletePassword(e.target);
 
@@ -231,10 +231,8 @@ function drawPasswordList() {
       cell1.innerHTML = passwords.list[i].web;
       cell2.innerHTML = passwords.list[i].un;
       cell3.innerHTML = '***';
-      cell4.innerHTML = '<span class="glyphicon glyphicon-eye-open" role="button" aria-hidden="true"></span> ' +
-                        '<span class="glyphicon glyphicon-pencil" role="button" aria-hidden="true"></span> ' +
-                        '<span class="glyphicon glyphicon-trash" role="button" aria-hidden="true"></span>';
-
+      cell4.innerHTML = '<i class="icon ion-md-eye"></i> <i class="icon ion-md-create"></i> ' +
+                        '<i class="icon ion-md-trash"></i>';
     }
   }
 }
@@ -244,17 +242,17 @@ function showHidePassword(element) {
 
   let tr = element.parentElement.parentElement;
 
-  if (element.classList.contains('glyphicon-eye-open')) {
+  if (element.classList.contains('ion-md-eye')) {
 
-    element.classList.remove('glyphicon-eye-open');
-    element.classList.add('glyphicon-eye-close');
+    element.classList.remove('ion-md-eye');
+    element.classList.add('ion-md-eye-off');
 
     tr.cells.item(2).innerHTML = tr.dataset.pw;
 
   } else {
 
-    element.classList.remove('glyphicon-eye-close');
-    element.classList.add('glyphicon-eye-open');
+    element.classList.remove('ion-md-eye-off');
+    element.classList.add('ion-md-eye');
 
     tr.cells.item(2).innerHTML = '***';
 
@@ -269,8 +267,8 @@ function editPassword(element) {
   tr.cells.item(0).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.web + '" />';
   tr.cells.item(1).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.un + '" />';
   tr.cells.item(2).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.pw + '" />';
-  tr.cells.item(3).innerHTML = '<span class="glyphicon glyphicon-ok" role="button" aria-hidden="true"></span> ' +
-                                '<span class="glyphicon glyphicon-remove" role="button" aria-hidden="true"></span>';
+  tr.cells.item(3).innerHTML = '<i class="icon ion-md-checkmark"></i> ' +
+                               '<i class="icon ion-md-close"></i>';
 
 }
 
@@ -427,10 +425,10 @@ function passwordAgainFieldHandler() {
 
   }
 
-  sideDivs[0].classList.remove('col-xs-' + (passwordFileExists ? '1' : '3'));
-  sideDivs[0].classList.add('col-xs-' + (passwordFileExists ? '3' : '1'));
-  sideDivs[1].classList.remove('col-xs-' + (passwordFileExists ? '1' : '3'));
-  sideDivs[1].classList.add('col-xs-' + (passwordFileExists ? '3' : '1'));
+  sideDivs[0].classList.remove('col-' + (passwordFileExists ? '1' : '3'));
+  sideDivs[0].classList.add('col-' + (passwordFileExists ? '3' : '1'));
+  sideDivs[1].classList.remove('col-' + (passwordFileExists ? '1' : '3'));
+  sideDivs[1].classList.add('col-' + (passwordFileExists ? '3' : '1'));
 
   loginSubmit.value = passwordFileExists ? 'Unlock' : 'Create';
 

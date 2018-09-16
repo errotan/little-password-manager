@@ -3,6 +3,7 @@
 html, body
 {
     font-family: 'Segoe UI', 'Open Sans', Arial;
+    font-size: 0.95rem;
     color: #222;
 }
 
@@ -16,4 +17,20 @@ html, body
 {
     padding-left: 2px;
     padding-right: 2px;
+}
+
+.hidden
+{
+    display: none;
+}
+
+.show
+{
+    display: block;
+}
+
+.icon
+{
+    font-size: 1.4rem;
+    line-height: 1;
 }
