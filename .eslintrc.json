@@ -2,7 +2,11 @@
     "env": {
         "browser": true,
         "commonjs": true,
+        "mocha": true,
         "node": true
+    },
+    "globals": {
+        "nw": false
     },
     "extends": "eslint:recommended",
     "parserOptions": {

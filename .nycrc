@@ -3,7 +3,7 @@
     "*.js"
   ],
   "exclude": [
-    "main.js"
+    "lpm.js"
   ],
   "cache": true,
   "all": true

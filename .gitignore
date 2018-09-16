@@ -1,4 +1,6 @@
 /.nyc_output
 /node_modules
-/package-lock.json
-/passwords.json
+
+package-lock.json
+passwords.json
+passwords.test.json

@@ -2,7 +2,8 @@
 
 const assert       = require('assert');
 const fs           = require('fs');
-const lpm          = require('../lpm.js');
+const lpmMain      = require('../lpm.main.js');
+const lpmStore     = require('../lpm.store.js');
 const EventEmitter = require('events');
 class Emitter extends EventEmitter {}
 const TestEmitter  = new Emitter();
@@ -16,20 +17,16 @@ global.$                = $;
 // read template
 document.body.innerHTML = fs.readFileSync('lpm.html', 'utf8').toString();
 
-// dependencies
-lpm.setWin(TestEmitter);
-lpm.setDocument(document);
-
 describe('Functional tests', function() {
 
   describe('init()', function() {
 
-    lpm.init();
+    lpmMain(TestEmitter, document);
 
     it('should show/hide password again field', function() {
 
       assert.equal(
-        fs.existsSync('passwords.json'),
+        lpmStore.passwordFileExists(),
         document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden')
       );
 
