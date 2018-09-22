@@ -1,27 +1,22 @@
 //! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 const assert       = require('assert');
-const fs           = require('fs');
 const rewire       = require('rewire');
+const helper       = require('./helper.js');
 const lpmStore     = rewire('../lpm.store.js');
-const newStorePath = 'passwords.test.json';
 const testPassword = '123password';
 
-function deleteStoreFile() {
-  try {
-    fs.unlinkSync(newStorePath);
-  } catch (err) {
-    // no handling
-  }
-}
-
 describe('lpm.store', function() {
+
+  after(function() {
+    helper.deleteStoreFile();
+  });
 
   it('setStoreFilePath() should save storefilepath', function() {
 
     assert.deepEqual(lpmStore.__get__('storeFilePath'), 'passwords.json');
-    lpmStore.setStoreFilePath(newStorePath);
-    assert.deepEqual(lpmStore.__get__('storeFilePath'), newStorePath);
+    lpmStore.setStoreFilePath(helper.tempStoreFile);
+    assert.deepEqual(lpmStore.__get__('storeFilePath'), helper.tempStoreFile);
 
   });
 
@@ -32,8 +27,6 @@ describe('lpm.store', function() {
     assert.deepEqual(lpmStore.__get__('mainPassword'), testPassword);
 
   });
-
-  deleteStoreFile();
 
   it('addPassword() should create store file', function() {
 
@@ -78,7 +71,4 @@ describe('lpm.store', function() {
     assert(typeof passwords[1] === 'undefined');
 
   });
-
 });
-
-deleteStoreFile();

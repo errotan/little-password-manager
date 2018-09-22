@@ -10,10 +10,14 @@ let win;
 // DOM instance
 let dom;
 
-function init(nw, doc) {
+function init(nw, doc, storeFilePath) {
 
   win = nw;
   dom = doc;
+
+  if (typeof storeFilePath !== 'undefined') {
+    lpmStore.setStoreFilePath(storeFilePath);
+  }
 
   attachWindowHandlers();
   passwordAgainFieldHandler();
