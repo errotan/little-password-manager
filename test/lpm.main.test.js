@@ -45,7 +45,7 @@ describe('lpm.main', function() {
 
   });
 
-  it('login shows table', function() {
+  it('after login passwords are listed', function() {
 
     document.getElementById('loginpassword').value = tempPassword;
     document.getElementById('loginpassword2').value = tempPassword;
@@ -73,7 +73,6 @@ describe('lpm.main', function() {
     let inputs = document.getElementsByClassName('form-control');
     
     inputs.item(3).value = 'un2';
-    inputs.item(4).value = 'web2';
     inputs.item(5).value = 'pw2';
     inputs.item(6).click();
 
@@ -82,6 +81,26 @@ describe('lpm.main', function() {
     document.getElementsByClassName('ion-md-trash').item(0).click();
 
     assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
+
+  });
+
+  it('clicking edit creates input fields', function() {
+    
+    assert.equal(document.getElementsByClassName('form-control').length, 7);
+
+    document.getElementsByClassName('ion-md-create').item(0).click();
+
+    assert.equal(document.getElementsByClassName('form-control').length, 10);
+
+  });
+
+  it('clicking cancel removes input fields', function() {
+    
+    assert.equal(document.getElementsByClassName('form-control').length, 10);
+
+    document.getElementsByClassName('ion-md-close').item(0).click();
+
+    assert.equal(document.getElementsByClassName('form-control').length, 7);
 
   });
 

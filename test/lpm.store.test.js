@@ -1,6 +1,7 @@
 //! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 const assert       = require('assert');
+const fs           = require('fs');
 const rewire       = require('rewire');
 const helper       = require('./helper.js');
 const lpmStore     = rewire('../lpm.store.js');
@@ -69,6 +70,19 @@ describe('lpm.store', function() {
     lpmStore.deletePassword(1);
     let passwords = lpmStore.getPasswords();
     assert(typeof passwords[1] === 'undefined');
+
+  });
+
+  it('readPasswordFile() should throw error if store is corrupt', function() {
+
+    fs.writeFileSync(helper.tempStoreFile, 'invalid content', 'utf8');
+
+    assert.throws(
+      function() { lpmStore.passwordValid(); },
+      /corrupted/
+    );
+
+    helper.deleteStoreFile();
 
   });
 });
