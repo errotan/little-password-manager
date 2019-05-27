@@ -2,21 +2,22 @@
 
 html, body
 {
-    font-family: 'Segoe UI', 'Open Sans', Arial;
+    font-family: 'Segoe UI', 'Open Sans', Arial, sans-serif;
     font-size: 0.95rem;
     color: #222;
 }
 
 .page-title
 {
-    margin-bottom: 50px;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
 
 .small-padding
 {
-    padding-left: 2px;
-    padding-right: 2px;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
 }
 
 .hidden
