@@ -2,62 +2,65 @@
 <html lang="en">
 <!-- Copyright (c) 2017-2019 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions. -->
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Little Password Manager</title>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="node_modules/ionicons/dist/css/ionicons.min.css">
-    <link rel="stylesheet" href="lpm.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="node_modules/ionicons/dist/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="lpm.css"/>
 </head>
 <body>
-    <div class="container-fluid">
-        <h3 class="page-title"><i class="ion-md-lock"></i> Little Password Manager</h3>
-        <form data-login>
-            <div class="row">
-                <div class="col-3 js-form-side"></div>
-                <div class="col-4 small-padding">
-                    <input class="form-control" type="password" id="loginpassword" placeholder="Password" />
-                </div>
-                <div class="col-4 small-padding hidden js-password-again">
-                    <input class="form-control" type="password" id="loginpassword2" placeholder="Password again" />
-                </div>
-                <div class="col-2 small-padding">
-                    <input class="form-control btn btn-primary" id="loginsubmit" type="submit" value="Unlock" />
-                </div>
-                <div class="col-3 js-form-side"></div>
+<div class="container-fluid">
+    <h3 class="page-title"><i class="ion-md-lock"></i> Little Password Manager</h3>
+    <form data-login>
+        <div class="row">
+            <div class="col-3 js-form-side"></div>
+            <div class="col-4 small-padding">
+                <input aria-label="password" class="form-control" type="password" id="loginpassword"
+                       placeholder="Password"/>
             </div>
-        </form>
-        <form>
-            <table class="table hidden">
-                <thead>
-                    <tr>
-                        <th>Web page or application</th>
-                        <th>Username</th>
-                        <th>Password</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <input class="form-control" type="text" placeholder="web page" />
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" placeholder="username" />
-                        </td>
-                        <td>
-                            <input class="form-control" type="text" placeholder="password" />
-                        </td>
-                        <td>
-                            <input class="form-control btn btn-primary" type="submit" value="Store" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </form>
-    </div>
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lpm.js"></script>
+            <div class="col-4 small-padding hidden js-password-again">
+                <input aria-label="password again" class="form-control" type="password" id="loginpassword2"
+                       placeholder="Password again"/>
+            </div>
+            <div class="col-2 small-padding">
+                <input class="form-control btn btn-primary" id="loginsubmit" type="submit" value="Unlock"/>
+            </div>
+            <div class="col-3 js-form-side"></div>
+        </div>
+    </form>
+    <form>
+        <table class="table hidden">
+            <caption>List of usernames and passwords</caption>
+            <thead>
+            <tr>
+                <th scope="col">Web page or application</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input aria-label="web page" class="form-control" type="text" placeholder="web page"/>
+                </td>
+                <td>
+                    <input aria-label="username" class="form-control" type="text" placeholder="username"/>
+                </td>
+                <td>
+                    <input aria-label="password" class="form-control" type="text" placeholder="password"/>
+                </td>
+                <td>
+                    <input class="form-control btn btn-primary" type="submit" value="Store"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lpm.js"></script>
 </body>
 </html>
