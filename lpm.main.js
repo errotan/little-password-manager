@@ -145,7 +145,7 @@ function loginHandler() {
 function drawPasswordList() {
 
   // hide login form
-  dom.getElementsByTagName('form').item(0).classList.add('hidden');
+  dom.getElementsByTagName('form').item(0).classList.add('d-none');
 
   // clear password list table
   clearMainTable();
@@ -153,7 +153,7 @@ function drawPasswordList() {
   // show password list table
   let mainTable = dom.getElementsByTagName('table').item(0);
 
-  mainTable.classList.remove('hidden');
+  mainTable.classList.remove('d-none');
 
   let passwords = lpmStore.getPasswords();
 
@@ -284,24 +284,18 @@ function saveNewPassword() {
 function passwordAgainFieldHandler() {
 
   let passwordDiv        = dom.getElementsByClassName('js-password-again').item(0);
-  let sideDivs           = dom.getElementsByClassName('js-form-side');
   let loginSubmit        = dom.getElementById('loginsubmit');
   let passwordFileExists = lpmStore.passwordFileExists();
 
   if (passwordFileExists) {
 
-    passwordDiv.classList.add('hidden');
+    passwordDiv.classList.add('d-none');
 
   } else {
 
-    passwordDiv.classList.remove('hidden');
+    passwordDiv.classList.remove('d-none');
 
   }
-
-  sideDivs[0].classList.remove('col-' + (passwordFileExists ? '1' : '3'));
-  sideDivs[0].classList.add('col-' + (passwordFileExists ? '3' : '1'));
-  sideDivs[1].classList.remove('col-' + (passwordFileExists ? '1' : '3'));
-  sideDivs[1].classList.add('col-' + (passwordFileExists ? '3' : '1'));
 
   loginSubmit.value = passwordFileExists ? 'Unlock' : 'Create';
 
@@ -311,12 +305,12 @@ function passwordAgainFieldHandler() {
 function logout() {
 
   // show login form
-  dom.getElementsByTagName('form').item(0).classList.remove('hidden');
+  dom.getElementsByTagName('form').item(0).classList.remove('d-none');
 
   // hide password list table
   let mainTable = dom.getElementsByTagName('table').item(0);
 
-  mainTable.classList.add('hidden');
+  mainTable.classList.add('d-none');
 
   lpmStore.reset();
 
