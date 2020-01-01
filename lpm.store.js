@@ -1,4 +1,4 @@
-//! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
+//! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 const fs = require('fs');
 const CryptoJS = require('crypto-js');
@@ -23,8 +23,66 @@ function passwordFileExists() {
   return fs.existsSync(storeFilePath);
 }
 
-function passwordValid() {
+// read password file, parse and load to passwords object
+function readPasswordFile() {
+  const data = fs.readFileSync(storeFilePath, 'utf8').toString();
 
+  try {
+    passwords = JSON.parse(data);
+  } catch (e) {
+    alert('Fatal error! Password file is corrupted!');
+
+    throw new Error('Fatal error! Password file is corrupted!');
+  }
+}
+
+function decryptString(string) {
+  return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
+}
+
+function encryptString(string) {
+  return CryptoJS.AES.encrypt(string, mainPassword).toString();
+}
+
+function passwordCheck() {
+  if (typeof passwords.list !== 'undefined' && passwords.list.length) {
+    return decryptString(passwords.list[0].pw).length;
+  }
+  return 0;
+}
+
+function decryptEntry(id, index) {
+  if (passwords.list[id][index].length > 0) {
+    passwords.list[id][index] = decryptString(passwords.list[id][index]);
+  }
+
+  return passwords.list[id][index];
+}
+
+function encryptEntry(id, index) {
+  if (passwords.list[id][index].length > 0) {
+    passwords.list[id][index] = encryptString(passwords.list[id][index]);
+  } else {
+    passwords.list[id][index] = '';
+  }
+}
+
+// encrypt or decrypt rows
+function processRows(type) {
+  for (let i = 0; i < passwords.list.length; i += 1) {
+    if (type === 'encrypt') {
+      encryptEntry(i, 'web');
+      encryptEntry(i, 'un');
+      encryptEntry(i, 'pw');
+    } else {
+      decryptEntry(i, 'web');
+      decryptEntry(i, 'un');
+      decryptEntry(i, 'pw');
+    }
+  }
+}
+
+function passwordValid() {
   readPasswordFile();
 
   if (!passwordCheck()) {
@@ -40,6 +98,18 @@ function getPasswords() {
   return passwords.list;
 }
 
+// save passwords to json file
+function savePasswords() {
+  // sort array
+  passwords.list.sort((a, b) => a.web.localeCompare(b.web));
+
+  processRows('encrypt');
+
+  fs.writeFileSync(storeFilePath, JSON.stringify(passwords), 'utf8');
+
+  processRows('decrypt');
+}
+
 function savePassword(id, web, un, pw) {
   passwords.list[id].web = web;
   passwords.list[id].un = un;
@@ -49,7 +119,6 @@ function savePassword(id, web, un, pw) {
 }
 
 function deletePassword(id) {
-
   passwords.list.splice(id, 1);
 
   savePasswords();
@@ -57,12 +126,10 @@ function deletePassword(id) {
 
 function addPassword(web, un, pw) {
   if (typeof passwords.list === 'undefined') {
-
     passwords.list = [];
-
   }
 
-  passwords.list.push({web: web, un: un, pw: pw});
+  passwords.list.push({ web, un, pw });
 
   savePasswords();
 }
@@ -72,111 +139,14 @@ function reset() {
   passwords = {};
 }
 
-// save passwords to json file
-function savePasswords() {
-
-  // sort array
-  passwords.list.sort(function (a, b) {
-    return a.web.localeCompare(b.web);
-  });
-
-  processRows('encrypt');
-
-  fs.writeFileSync(storeFilePath, JSON.stringify(passwords), 'utf8');
-
-  processRows('decrypt');
-
-}
-
-// encrypt or decrypt rows
-function processRows(type) {
-
-  for (let i = 0; i < passwords.list.length; i++) {
-
-    if (type === 'encrypt') {
-
-      encryptEntry(i, 'web');
-      encryptEntry(i, 'un');
-      encryptEntry(i, 'pw');
-
-    } else {
-
-      decryptEntry(i, 'web');
-      decryptEntry(i, 'un');
-      decryptEntry(i, 'pw');
-
-    }
-  }
-}
-
-function encryptEntry(id, index) {
-
-  if (passwords.list[id][index].length > 0) {
-
-    passwords.list[id][index] = encryptString(passwords.list[id][index]);
-
-  } else {
-
-    passwords.list[id][index] = '';
-
-  }
-}
-
-function decryptEntry(id, index) {
-
-  if (passwords.list[id][index].length > 0) {
-
-    passwords.list[id][index] = decryptString(passwords.list[id][index]);
-
-  }
-
-  return passwords.list[id][index];
-
-}
-
-// read password file, parse and load to passwords object
-function readPasswordFile() {
-
-  let data = fs.readFileSync(storeFilePath, 'utf8').toString();
-
-  try {
-
-    passwords = JSON.parse(data);
-
-  } catch (e) {
-
-    alert('Fatal error! Password file is corrupted!');
-
-    throw new Error('Fatal error! Password file is corrupted!');
-
-  }
-}
-
-function passwordCheck() {
-
-  if (typeof passwords.list !== 'undefined' && passwords.list.length) {
-
-    return decryptString(passwords.list[0].pw).length;
-
-  }
-}
-
-function encryptString(string) {
-  return CryptoJS.AES.encrypt(string, mainPassword).toString();
-}
-
-function decryptString(string) {
-  return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
-}
-
 module.exports = {
-  setStoreFilePath: setStoreFilePath,
-  setMainPassword: setMainPassword,
-  passwordFileExists: passwordFileExists,
-  passwordValid: passwordValid,
-  getPasswords: getPasswords,
-  savePassword: savePassword,
-  deletePassword: deletePassword,
-  addPassword: addPassword,
-  reset: reset
+  setStoreFilePath,
+  setMainPassword,
+  passwordFileExists,
+  passwordValid,
+  getPasswords,
+  savePassword,
+  deletePassword,
+  addPassword,
+  reset,
 };

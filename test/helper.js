@@ -1,6 +1,7 @@
-//! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
+//! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const fs            = require('fs');
+const fs = require('fs');
+
 const tempStoreFile = 'passwords.test.json';
 
 function deleteStoreFile() {
@@ -12,6 +13,6 @@ function deleteStoreFile() {
 }
 
 module.exports = {
-  tempStoreFile: tempStoreFile,
-  deleteStoreFile: deleteStoreFile
+  tempStoreFile,
+  deleteStoreFile,
 };
