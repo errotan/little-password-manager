@@ -1,7 +1,5 @@
 //! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-'use strict';
-
 const lpmStore = require('./lpm.store.js');
 
 // nw instance
@@ -29,7 +27,7 @@ function init(nw, doc, storeFilePath) {
 function addListeners() {
 
   // click handlers
-  dom.addEventListener('click', function(e) {
+  dom.addEventListener('click', function (e) {
 
     // show/hide event
     if (e.target.classList.contains('ion-md-eye') || e.target.classList.contains('ion-md-eye-off')) {
@@ -68,7 +66,7 @@ function addListeners() {
   });
 
   // form submit handlers
-  dom.addEventListener('submit', function(e) {
+  dom.addEventListener('submit', function (e) {
 
     // prevent page navigation
     e.preventDefault();
@@ -92,7 +90,7 @@ function loginHandler() {
 
   lpmStore.setMainPassword(loginPassword.value);
 
-  if ( ! lpmStore.passwordFileExists()) {
+  if (!lpmStore.passwordFileExists()) {
 
     let loginPassword2 = dom.getElementById('loginpassword2');
 
@@ -105,7 +103,7 @@ function loginHandler() {
       // passwords match
 
       // clear password fields
-      loginPassword.value  = '';
+      loginPassword.value = '';
       loginPassword2.value = '';
 
       // maximize window
@@ -163,7 +161,7 @@ function drawPasswordList() {
 
     for (let i = 0; i < passwords.length; i++) {
 
-      let row   = mainTableBody.insertRow(i);
+      let row = mainTableBody.insertRow(i);
       let cell1 = row.insertCell(0);
       let cell2 = row.insertCell(1);
       let cell3 = row.insertCell(2);
@@ -177,14 +175,14 @@ function drawPasswordList() {
 
       // save datas
       row.dataset.web = passwords[i].web;
-      row.dataset.un  = passwords[i].un;
-      row.dataset.pw  = passwords[i].pw;
+      row.dataset.un = passwords[i].un;
+      row.dataset.pw = passwords[i].pw;
 
       cell1.innerHTML = passwords[i].web;
       cell2.innerHTML = passwords[i].un;
       cell3.innerHTML = '***';
       cell4.innerHTML = '<i class="icon ion-md-eye"></i> <i class="icon ion-md-create"></i> ' +
-                        '<i class="icon ion-md-trash"></i>';
+        '<i class="icon ion-md-trash"></i>';
     }
   }
 }
@@ -220,7 +218,7 @@ function editPassword(element) {
   tr.cells.item(1).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.un + '" />';
   tr.cells.item(2).innerHTML = '<input class="form-control" type="text" value="' + tr.dataset.pw + '" />';
   tr.cells.item(3).innerHTML = '<i class="icon ion-md-checkmark"></i> ' +
-                               '<i class="icon ion-md-close"></i>';
+    '<i class="icon ion-md-close"></i>';
 
 }
 
@@ -283,8 +281,8 @@ function saveNewPassword() {
 // password again shower/hider for first time run
 function passwordAgainFieldHandler() {
 
-  let passwordDiv        = dom.getElementsByClassName('js-password-again').item(0);
-  let loginSubmit        = dom.getElementById('loginsubmit');
+  let passwordDiv = dom.getElementsByClassName('js-password-again').item(0);
+  let loginSubmit = dom.getElementById('loginsubmit');
   let passwordFileExists = lpmStore.passwordFileExists();
 
   if (passwordFileExists) {
@@ -322,7 +320,7 @@ function logout() {
 function clearMainTable() {
 
   let mainTableTbody = dom.getElementsByTagName('table').item(0).getElementsByTagName('tbody').item(0);
-  let passwordRows   = mainTableTbody.getElementsByTagName('tr');
+  let passwordRows = mainTableTbody.getElementsByTagName('tr');
 
   for (let i = passwordRows.length - 2; i >= 0; i--) {
 
@@ -335,7 +333,7 @@ function clearMainTable() {
 function attachWindowHandlers() {
 
   // lock on minimize 
-  win.on('minimize', function() {
+  win.on('minimize', function () {
 
     passwordAgainFieldHandler();
     logout();
@@ -343,7 +341,7 @@ function attachWindowHandlers() {
   });
 
   // shrink size and move to center on restore
-  win.on('restore', function() {
+  win.on('restore', function () {
 
     win.resizeTo(510, 410);
     win.setPosition('center');

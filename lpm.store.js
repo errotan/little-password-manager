@@ -1,8 +1,6 @@
 //! Copyright (c) 2017-2018 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-'use strict';
-
-const fs       = require('fs');
+const fs = require('fs');
 const CryptoJS = require('crypto-js');
 
 let storeFilePath = 'passwords.json';
@@ -29,7 +27,7 @@ function passwordValid() {
 
   readPasswordFile();
 
-  if ( ! passwordCheck()) {
+  if (!passwordCheck()) {
     return false;
   }
 
@@ -44,8 +42,8 @@ function getPasswords() {
 
 function savePassword(id, web, un, pw) {
   passwords.list[id].web = web;
-  passwords.list[id].un  = un;
-  passwords.list[id].pw  = pw;
+  passwords.list[id].un = un;
+  passwords.list[id].pw = pw;
 
   savePasswords();
 }
@@ -78,7 +76,9 @@ function reset() {
 function savePasswords() {
 
   // sort array
-  passwords.list.sort(function(a, b) { return a.web.localeCompare(b.web); });
+  passwords.list.sort(function (a, b) {
+    return a.web.localeCompare(b.web);
+  });
 
   processRows('encrypt');
 
@@ -104,7 +104,7 @@ function processRows(type) {
       decryptEntry(i, 'web');
       decryptEntry(i, 'un');
       decryptEntry(i, 'pw');
-  
+
     }
   }
 }
