@@ -6,28 +6,13 @@
         "node": true
     },
     "globals": {
-        "nw": false
+        "nw": "readonly"
     },
-    "extends": "eslint:recommended",
+    "extends": "airbnb",
     "parserOptions": {
-        "ecmaVersion": 6
+        "ecmaVersion": 6,
+        "sourceType": "script"
     },
     "rules": {
-        "indent": [
-            "error",
-            2
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ]
     }
 }
