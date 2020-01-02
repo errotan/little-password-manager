@@ -8,7 +8,7 @@
     "globals": {
         "nw": "readonly"
     },
-    "extends": "airbnb",
+    "extends": "airbnb-base",
     "parserOptions": {
         "ecmaVersion": 2017,
         "sourceType": "script"
