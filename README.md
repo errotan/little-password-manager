@@ -1,4 +1,5 @@
-# Little Password Manager [![Build Status](https://travis-ci.org/errotan/little-password-manager.svg?branch=master)](https://travis-ci.org/errotan/little-password-manager) [![Coverage Status](https://coveralls.io/repos/github/errotan/little-password-manager/badge.svg?branch=master)](https://coveralls.io/github/errotan/little-password-manager?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/4bbc5561ba99cb5c3bd7/maintainability)](https://codeclimate.com/github/errotan/little-password-manager/maintainability)
+# Little Password Manager
+[![Build Status](https://travis-ci.com/errotan/little-password-manager.svg?branch=master)](https://travis-ci.com/errotan/little-password-manager) [![Coverage Status](https://coveralls.io/repos/github/errotan/little-password-manager/badge.svg?branch=master)](https://coveralls.io/github/errotan/little-password-manager?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/4bbc5561ba99cb5c3bd7/maintainability)](https://codeclimate.com/github/errotan/little-password-manager/maintainability)
 
 ### About
 
