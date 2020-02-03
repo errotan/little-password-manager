@@ -9,5 +9,5 @@ const lpmMain = require('./lpm.main.js');
 
 // run init after page loaded
 document.addEventListener('DOMContentLoaded', () => {
-  lpmMain(nw.Window.get(), document);
+  lpmMain(nw.Window.get(), nw.Clipboard.get(), document);
 });

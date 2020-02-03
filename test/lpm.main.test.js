@@ -12,7 +12,8 @@ class Emitter extends EventEmitter {
   }
 }
 
-const TestEmitter = new Emitter();
+const windowEmitter = new Emitter();
+const clipboardEmitter = new EventEmitter();
 const tempPassword = 'secret54321';
 
 // create browser env
@@ -33,7 +34,7 @@ require('jsdom-global')(
 lpmStore.setStoreFilePath(helper.tempStoreFile);
 
 // call init
-lpmMain(TestEmitter, document, helper.tempStoreFile);
+lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
 
 describe('lpm.main', () => {
   after(() => {
@@ -97,10 +98,10 @@ describe('lpm.main', () => {
   });
 
   it('minimize clears table', () => {
-    TestEmitter.on('minimize', () => {
+    windowEmitter.on('minimize', () => {
       assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 2);
     });
 
-    TestEmitter.emit('minimize');
+    windowEmitter.emit('minimize');
   });
 });

@@ -2,8 +2,11 @@
 
 const lpmStore = require('./lpm.store.js');
 
-// nw instance
+// nw window instance
 let win;
+
+// nw clipboard instance
+let clipboard;
 
 // DOM instance
 let dom;
@@ -19,6 +22,11 @@ function clearMainTable() {
   for (let i = passwordRows.length - 2; i >= 0; i -= 1) {
     mainTableTbody.removeChild(passwordRows[i]);
   }
+}
+
+function copyToClipboard(element) {
+  clipboard.set(element.parentElement.parentElement.dataset.pw);
+  alert('Password copied!');
 }
 
 // password shower
@@ -77,8 +85,10 @@ function drawPasswordList() {
       cell1.innerHTML = passwords[i].web;
       cell2.innerHTML = passwords[i].un;
       cell3.innerHTML = '***';
-      cell4.innerHTML = '<i class="icon ion-md-eye"></i> <i class="icon ion-md-create"></i> '
-        + '<i class="icon ion-md-trash"></i>';
+      cell4.innerHTML = '<i class="icon ion-md-clipboard" title="copy to clipboard"></i> '
+        + '<i class="icon ion-md-eye" title="show/hide"></i> '
+        + '<i class="icon ion-md-create" title="edit"></i> '
+        + '<i class="icon ion-md-trash" title="delete"></i>';
     }
   }
 }
@@ -182,6 +192,11 @@ function saveNewPassword() {
 function addListeners() {
   // click handlers
   dom.addEventListener('click', (e) => {
+    // delete event
+    if (e.target.classList.contains('ion-md-clipboard')) {
+      copyToClipboard(e.target);
+    }
+
     // show/hide event
     if (e.target.classList.contains('ion-md-eye') || e.target.classList.contains('ion-md-eye-off')) {
       showHidePassword(e.target);
@@ -267,8 +282,9 @@ function attachWindowHandlers() {
   });
 }
 
-function init(nw, doc, storeFilePath) {
+function init(nw, clip, doc, storeFilePath) {
   win = nw;
+  clipboard = clip;
   dom = doc;
 
   if (typeof storeFilePath !== 'undefined') {
