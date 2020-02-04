@@ -5,7 +5,7 @@ const fs = require('fs');
 const rewire = require('rewire');
 const helper = require('./helper.js');
 
-const lpmStore = rewire('../lpm.store.js');
+const lpmStore = rewire('../src/store.js');
 const testPassword = '123password';
 
 describe('lpm.store', () => {

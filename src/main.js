@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const lpmStore = require('./lpm.store.js');
+const lpmStore = require('./store.js');
 
 // nw window instance
 let win;

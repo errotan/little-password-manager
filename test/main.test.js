@@ -4,8 +4,8 @@ const assert = require('assert');
 const fs = require('fs');
 const EventEmitter = require('events');
 const helper = require('./helper.js');
-const lpmMain = require('../lpm.main.js');
-const lpmStore = require('../lpm.store.js');
+const lpmMain = require('../src/main.js');
+const lpmStore = require('../src/store.js');
 
 class Emitter extends EventEmitter {
   maximize() {
@@ -18,7 +18,7 @@ const tempPassword = 'secret54321';
 
 // create browser env
 require('jsdom-global')(
-  fs.readFileSync('lpm.html', 'utf8').toString(),
+  fs.readFileSync('index.html', 'utf8').toString(),
   {
     beforeParse(window) {
       window.alert = function () {

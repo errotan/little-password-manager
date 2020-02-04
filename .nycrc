@@ -1,9 +1,9 @@
 {
   "include": [
-    "*.js"
+    "src/*.js"
   ],
   "exclude": [
-    "lpm.js"
+    "src/index.js"
   ],
   "cache": true,
   "all": true

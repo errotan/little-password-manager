@@ -5,7 +5,7 @@ if (typeof nw === 'undefined') {
   throw new Error('This application needs to be run in NW.js!');
 }
 
-const lpmMain = require('./lpm.main.js');
+const lpmMain = require('./main.js');
 
 // run init after page loaded
 document.addEventListener('DOMContentLoaded', () => {
