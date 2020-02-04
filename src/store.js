@@ -30,8 +30,6 @@ function readPasswordFile() {
   try {
     passwords = JSON.parse(data);
   } catch (e) {
-    alert('Fatal error! Password file is corrupted!');
-
     throw new Error('Fatal error! Password file is corrupted!');
   }
 }

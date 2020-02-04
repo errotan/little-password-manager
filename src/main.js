@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const lpmStore = require('./store.js');
+const lpmStore = require('./store');
 
 // nw window instance
 let win;
@@ -155,16 +155,20 @@ function loginHandler() {
     return;
   }
 
-  if (lpmStore.passwordValid()) {
-    // clear password field
-    loginPassword.value = '';
+  try {
+    if (lpmStore.passwordValid()) {
+      // clear password field
+      loginPassword.value = '';
 
-    // maximize window
-    win.maximize();
+      // maximize window
+      win.maximize();
 
-    drawPasswordList();
-  } else {
-    alert('Password is invalid!');
+      drawPasswordList();
+    } else {
+      alert('Password is invalid!');
+    }
+  } catch (e) {
+    alert(e);
   }
 }
 
