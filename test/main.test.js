@@ -21,8 +21,6 @@ require('jsdom-global')(
   fs.readFileSync('src/index.html', 'utf8').toString(),
   {
     beforeParse(window) {
-      window.alert = function () {
-      };
       window.confirm = function () {
         return true;
       };

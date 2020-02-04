@@ -11,6 +11,12 @@ let clipboard;
 // DOM instance
 let dom;
 
+function displayNotice(text) {
+  dom.getElementsByClassName('modal-title').item(0).innerHTML = 'Notice';
+  dom.getElementsByClassName('modal-body').item(0).innerHTML = text;
+  dom.getElementById('modal_button').click();
+}
+
 // clear password list table
 function clearMainTable() {
   const mainTableTbody = dom.getElementsByTagName('table')
@@ -26,7 +32,7 @@ function clearMainTable() {
 
 function copyToClipboard(element) {
   clipboard.set(element.parentElement.parentElement.dataset.pw);
-  alert('Password copied!');
+  displayNotice('Password copied!');
 }
 
 // password shower
@@ -135,7 +141,7 @@ function loginHandler() {
     const loginPassword2 = dom.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
-      alert('Password needs to be atleast 8 character long!');
+      displayNotice('Password needs to be atleast 8 character long!');
     } else if (loginPassword.value === loginPassword2.value) {
       // passwords match
 
@@ -149,7 +155,7 @@ function loginHandler() {
       // draw password list table
       drawPasswordList();
     } else {
-      alert('Passwords don\'t match!');
+      displayNotice('Passwords don\'t match!');
     }
 
     return;
@@ -165,10 +171,10 @@ function loginHandler() {
 
       drawPasswordList();
     } else {
-      alert('Password is invalid!');
+      displayNotice('Password is invalid!');
     }
   } catch (e) {
-    alert(e);
+    displayNotice(e);
   }
 }
 
@@ -186,9 +192,9 @@ function saveNewPassword() {
 
     drawPasswordList();
 
-    alert('Store successfull!');
+    displayNotice('Store successfull!');
   } else {
-    alert('Atleast web page or username plus password need to be set to store!');
+    displayNotice('Atleast web page or username plus password need to be set to store!');
   }
 }
 
