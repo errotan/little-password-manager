@@ -18,7 +18,7 @@ const tempPassword = 'secret54321';
 
 // create browser env
 require('jsdom-global')(
-  fs.readFileSync('index.html', 'utf8').toString(),
+  fs.readFileSync('src/index.html', 'utf8').toString(),
   {
     beforeParse(window) {
       window.alert = function () {
