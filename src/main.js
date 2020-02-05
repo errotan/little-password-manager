@@ -11,10 +11,18 @@ let clipboard;
 // DOM instance
 let dom;
 
-function displayNotice(text) {
-  dom.getElementsByClassName('modal-title').item(0).innerHTML = 'Notice';
+function displayText(title, text) {
+  dom.getElementsByClassName('modal-title').item(0).innerHTML = title;
   dom.getElementsByClassName('modal-body').item(0).innerHTML = text;
   dom.getElementById('modal_button').click();
+}
+
+function displayNotice(text) {
+  displayText('Notice', text);
+}
+
+function displayError(text) {
+  displayText('Error', text);
 }
 
 // clear password list table
@@ -174,7 +182,7 @@ function loginHandler() {
       displayNotice('Password is invalid!');
     }
   } catch (e) {
-    displayNotice(e);
+    displayError(e);
   }
 }
 
