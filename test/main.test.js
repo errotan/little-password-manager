@@ -17,16 +17,7 @@ const clipboardEmitter = new EventEmitter();
 const tempPassword = 'secret54321';
 
 // create browser env
-require('jsdom-global')(
-  fs.readFileSync('src/index.html', 'utf8').toString(),
-  {
-    beforeParse(window) {
-      window.confirm = function () {
-        return true;
-      };
-    },
-  },
-);
+require('jsdom-global')(fs.readFileSync('src/index.html', 'utf8').toString());
 
 // set temp path
 lpmStore.setStoreFilePath(helper.tempStoreFile);
@@ -74,7 +65,9 @@ describe('lpm.main', () => {
 
     assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 4);
 
-    document.getElementsByClassName('ion-md-trash').item(0).click();
+    const firstTrashIcon = document.getElementsByClassName('ion-md-trash').item(0);
+    firstTrashIcon.dataset.confirmed = true;
+    firstTrashIcon.click();
 
     assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
   });

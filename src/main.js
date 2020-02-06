@@ -11,7 +11,17 @@ let clipboard;
 // DOM instance
 let dom;
 
-function displayText(title, text) {
+let confirmTarget;
+
+function displayText(title, text, isQuestion = false) {
+  const confirmButton = dom.getElementById('confirm_button').classList;
+
+  if (isQuestion) {
+    confirmButton.remove('d-none');
+  } else {
+    confirmButton.add('d-none');
+  }
+
   dom.getElementsByClassName('modal-title').item(0).innerHTML = title;
   dom.getElementsByClassName('modal-body').item(0).innerHTML = text;
   dom.getElementById('modal_button').click();
@@ -23,6 +33,10 @@ function displayNotice(text) {
 
 function displayError(text) {
   displayText('Error', text);
+}
+
+function displayQuestion(text) {
+  displayText('Question', text, true);
 }
 
 // clear password list table
@@ -119,23 +133,30 @@ function editPassword(element) {
 
 // save edited password
 function saveEditedPassword(element) {
-  if (confirm('Do you really want to save this data?')) {
-    const tr = element.parentElement.parentElement;
-    const input = tr.getElementsByTagName('input');
+  const tr = element.parentElement.parentElement;
+  const input = tr.getElementsByTagName('input');
+  confirmTarget = element;
 
+  if ('confirmed' in confirmTarget.dataset) {
+    delete confirmTarget.dataset.confirmed;
     lpmStore
       .savePassword(tr.dataset.id, input.item(0).value, input.item(1).value, input.item(2).value);
-
     drawPasswordList();
+  } else {
+    displayQuestion('Do you really want to save this data?');
   }
 }
 
 // password delete handler
 function deletePassword(element) {
-  if (confirm('Do you really want to delete this data?')) {
-    lpmStore.deletePassword(element.parentElement.parentElement.dataset.id);
+  confirmTarget = element;
 
+  if ('confirmed' in confirmTarget.dataset) {
+    delete confirmTarget.dataset.confirmed;
+    lpmStore.deletePassword(element.parentElement.parentElement.dataset.id);
     drawPasswordList();
+  } else {
+    displayQuestion('Do you really want to delete this data?');
   }
 }
 
@@ -200,7 +221,7 @@ function saveNewPassword() {
 
     drawPasswordList();
 
-    displayNotice('Store successfull!');
+    displayNotice('Store successful!');
   } else {
     displayNotice('Atleast web page or username plus password need to be set to store!');
   }
@@ -238,6 +259,12 @@ function addListeners() {
     // delete event
     if (e.target.classList.contains('ion-md-trash')) {
       deletePassword(e.target);
+    }
+
+    // confirm event
+    if (e.target.id === 'confirm_button' && confirmTarget) {
+      confirmTarget.dataset.confirmed = true;
+      confirmTarget.click();
     }
   });
 
