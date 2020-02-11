@@ -1,7 +1,8 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 const assert = require('assert');
-const fs = require('fs');
+const fs = require('fs').promises;
+const jsdomGlobal = require('jsdom-global');
 const EventEmitter = require('events');
 const helper = require('./helper.js');
 const lpmMain = require('../src/main.js');
@@ -16,20 +17,20 @@ const windowEmitter = new Emitter();
 const clipboardEmitter = new EventEmitter();
 const tempPassword = 'secret54321';
 
-// create browser env
-require('jsdom-global')(fs.readFileSync('src/index.html', 'utf8').toString());
-
 // set temp path
 lpmStore.setStoreFilePath(helper.tempStoreFile);
 
-// call init
-lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
+before(async () => {
+  // create browser env
+  jsdomGlobal(await fs.readFile('src/index.html', 'utf8'));
+
+  // call init
+  lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
+});
+
+after(async () => helper.deleteStoreFile());
 
 describe('lpm.main', () => {
-  after(() => {
-    helper.deleteStoreFile();
-  });
-
   it('password again shown if store file is not found', () => {
     assert.equal(
       lpmStore.passwordFileExists(),

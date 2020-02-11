@@ -8,11 +8,9 @@ const helper = require('./helper.js');
 const lpmStore = rewire('../src/store.js');
 const testPassword = '123password';
 
-describe('lpm.store', () => {
-  after(() => {
-    helper.deleteStoreFile();
-  });
+after(async () => helper.deleteStoreFile());
 
+describe('lpm.store', () => {
   it('setStoreFilePath() should save storefilepath', () => {
     assert.deepEqual(lpmStore.__get__('storeFilePath'), 'passwords.json');
     lpmStore.setStoreFilePath(helper.tempStoreFile);
@@ -66,7 +64,5 @@ describe('lpm.store', () => {
       },
       /corrupted/,
     );
-
-    helper.deleteStoreFile();
   });
 });
