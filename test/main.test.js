@@ -8,12 +8,12 @@ const helper = require('./helper.js');
 const lpmMain = require('../src/main.js');
 const lpmStore = require('../src/store.js');
 
-class Emitter extends EventEmitter {
+class WindowEmitter extends EventEmitter {
   maximize() {
   }
 }
 
-const windowEmitter = new Emitter();
+const windowEmitter = new WindowEmitter();
 const clipboardEmitter = new EventEmitter();
 const tempPassword = 'secret54321';
 
