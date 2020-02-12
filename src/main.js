@@ -89,7 +89,7 @@ function drawPasswordList() {
 
   const passwords = lpmStore.getPasswords();
 
-  if (typeof passwords !== 'undefined') {
+  if (passwords !== undefined) {
     const mainTableBody = mainTable.getElementsByTagName('tbody').item(0);
 
     for (let i = 0; i < passwords.length; i += 1) {
@@ -332,7 +332,7 @@ function init(nw, clip, doc, storeFilePath) {
   clipboard = clip;
   dom = doc;
 
-  if (typeof storeFilePath !== 'undefined') {
+  if (storeFilePath !== undefined) {
     lpmStore.setStoreFilePath(storeFilePath);
   }
 
