@@ -2,44 +2,40 @@
 
 const assert = require('assert');
 const fs = require('fs');
-const rewire = require('rewire');
 const helper = require('./helper.js');
+const lpmStore = require('../src/store.js');
 
-const lpmStore = rewire('../src/store.js');
 const testPassword = '123password';
 
-after(async () => helper.deleteStoreFile());
-
 describe('lpm.store', () => {
-  it('setStoreFilePath() should save storefilepath', () => {
-    assert.deepEqual(lpmStore.__get__('storeFilePath'), 'passwords.json');
-    lpmStore.setStoreFilePath(helper.tempStoreFile);
-    assert.deepEqual(lpmStore.__get__('storeFilePath'), helper.tempStoreFile);
-  });
-
-  it('setMainPassword() should save password', () => {
-    assert.deepEqual(lpmStore.__get__('mainPassword'), '');
-    lpmStore.setMainPassword(testPassword);
-    assert.deepEqual(lpmStore.__get__('mainPassword'), testPassword);
-  });
+  before(async () => helper.deleteStoreFile());
+  after(async () => helper.deleteStoreFile());
 
   it('addPassword() should create store file', () => {
+    lpmStore.open(testPassword, helper.tempStoreFile);
     lpmStore.addPassword('web', 'un', 'pw');
-    assert.deepEqual(lpmStore.passwordFileExists(), true);
+    assert.ok(lpmStore.passwordFileExists());
   });
 
   it('getPasswords() should be array', () => {
     assert(typeof lpmStore.getPasswords() === 'object');
   });
 
-  it('passwordValid() should return false if password is incorrect', () => {
-    lpmStore.setMainPassword('incorrect pass');
-    assert.deepEqual(lpmStore.passwordValid(), false);
+  it('open() must throw error if password is incorrect', () => {
+    assert.throws(
+      () => {
+        lpmStore.open('incorrect pass', helper.tempStoreFile);
+      },
+      /invalid/,
+    );
   });
 
-  it('passwordValid() should return true if password is correct', () => {
-    lpmStore.setMainPassword(testPassword);
-    assert.deepEqual(lpmStore.passwordValid(), true);
+  it('open() must not throw error if password is correct', () => {
+    assert.doesNotThrow(
+      () => {
+        lpmStore.open(testPassword, helper.tempStoreFile);
+      },
+    );
   });
 
   it('savePassword() should alter password', () => {
@@ -55,12 +51,12 @@ describe('lpm.store', () => {
     assert(typeof passwords[1] === 'undefined');
   });
 
-  it('readPasswordFile() should throw error if store is corrupt', () => {
+  it('open() should throw error if store is corrupt', () => {
     fs.writeFileSync(helper.tempStoreFile, 'invalid content', 'utf8');
 
     assert.throws(
       () => {
-        lpmStore.passwordValid();
+        lpmStore.open(testPassword, helper.tempStoreFile);
       },
       /corrupted/,
     );

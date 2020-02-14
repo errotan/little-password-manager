@@ -11,6 +11,7 @@ let clipboard;
 // DOM instance
 let dom;
 
+let storeFilePath;
 let confirmTarget;
 
 function displayText(title, text, isQuestion = false) {
@@ -164,8 +165,6 @@ function deletePassword(element) {
 function loginHandler() {
   const loginPassword = dom.getElementById('loginpassword');
 
-  lpmStore.setMainPassword(loginPassword.value);
-
   if (!lpmStore.passwordFileExists()) {
     const loginPassword2 = dom.getElementById('loginpassword2');
 
@@ -191,17 +190,15 @@ function loginHandler() {
   }
 
   try {
-    if (lpmStore.passwordValid()) {
-      // clear password field
-      loginPassword.value = '';
+    lpmStore.open(loginPassword.value, storeFilePath);
 
-      // maximize window
-      win.maximize();
+    // clear password field
+    loginPassword.value = '';
 
-      drawPasswordList();
-    } else {
-      displayNotice('Password is invalid!');
-    }
+    // maximize window
+    win.maximize();
+
+    drawPasswordList();
   } catch (e) {
     displayError(e);
   }
@@ -327,13 +324,13 @@ function attachWindowHandlers() {
   });
 }
 
-function init(nw, clip, doc, storeFilePath) {
+function init(nw, clip, doc, filePath) {
   win = nw;
   clipboard = clip;
   dom = doc;
 
-  if (storeFilePath !== undefined) {
-    lpmStore.setStoreFilePath(storeFilePath);
+  if (filePath !== undefined) {
+    storeFilePath = filePath;
   }
 
   attachWindowHandlers();

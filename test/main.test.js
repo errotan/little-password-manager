@@ -6,7 +6,6 @@ const jsdomGlobal = require('jsdom-global');
 const EventEmitter = require('events');
 const helper = require('./helper.js');
 const lpmMain = require('../src/main.js');
-const lpmStore = require('../src/store.js');
 
 class WindowEmitter extends EventEmitter {
   maximize() {
@@ -17,25 +16,21 @@ const windowEmitter = new WindowEmitter();
 const clipboardEmitter = new EventEmitter();
 const tempPassword = 'secret54321';
 
-// set temp path
-lpmStore.setStoreFilePath(helper.tempStoreFile);
-
-before(async () => {
-  // create browser env
-  jsdomGlobal(await fs.readFile('src/index.html', 'utf8'));
-
-  // call init
-  lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
-});
-
-after(async () => helper.deleteStoreFile());
-
 describe('lpm.main', () => {
-  it('password again shown if store file is not found', () => {
-    assert.equal(
-      lpmStore.passwordFileExists(),
-      document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden'),
-    );
+  before(async () => {
+    await helper.deleteStoreFile();
+
+    // create browser env
+    jsdomGlobal(await fs.readFile('src/index.html', 'utf8'));
+
+    // call init
+    lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
+  });
+
+  after(async () => helper.deleteStoreFile());
+
+  it('password again shown on first start', () => {
+    assert.ok(!document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden'));
   });
 
   it('after login passwords are listed', () => {
@@ -46,7 +41,7 @@ describe('lpm.main', () => {
     assert.equal(document.getElementsByClassName('table').item(0).classList.contains('hidden'), false);
   });
 
-  it('adding entry creates store file', () => {
+  it('adding entry creates row', () => {
     const inputs = document.getElementsByClassName('form-control');
 
     inputs.item(3).value = 'un';
@@ -54,10 +49,10 @@ describe('lpm.main', () => {
     inputs.item(5).value = 'pw';
     inputs.item(6).click();
 
-    assert(lpmStore.passwordFileExists());
+    assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
   });
 
-  it('delete removes row from store file', () => {
+  it('delete removes row', () => {
     const inputs = document.getElementsByClassName('form-control');
 
     inputs.item(3).value = 'un2';

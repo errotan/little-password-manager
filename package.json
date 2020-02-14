@@ -37,8 +37,7 @@
     "jsdom-global": "^3.0.2",
     "mocha": "^7.0.1",
     "mocha-lcov-reporter": "^1.3.0",
-    "nyc": "^15.0.0",
-    "rewire": "^4.0.1"
+    "nyc": "^15.0.0"
   },
   "scripts": {
     "start": "nw",

@@ -11,21 +11,13 @@ let mainPassword = '';
 // this object holds all passwords
 let passwords = {};
 
-function setStoreFilePath(path) {
-  storeFilePath = path;
-}
-
-function setMainPassword(password) {
-  mainPassword = password;
-}
-
 function passwordFileExists() {
   return fs.existsSync(storeFilePath);
 }
 
 // read password file, parse and load to passwords object
 function readPasswordFile() {
-  const data = fs.readFileSync(storeFilePath, 'utf8').toString();
+  const data = fs.readFileSync(storeFilePath, 'utf8');
 
   try {
     passwords = JSON.parse(data);
@@ -42,11 +34,11 @@ function encryptString(string) {
   return CryptoJS.AES.encrypt(string, mainPassword).toString();
 }
 
-function passwordCheck() {
+function passwordValid() {
   if (typeof passwords.list !== 'undefined' && passwords.list.length) {
-    return decryptString(passwords.list[0].pw).length;
+    return decryptString(passwords.list[0].pw).length !== 0;
   }
-  return 0;
+  return false;
 }
 
 function decryptEntry(id, index) {
@@ -80,16 +72,22 @@ function processRows(type) {
   }
 }
 
-function passwordValid() {
-  readPasswordFile();
+function open(password, path) {
+  mainPassword = password;
 
-  if (!passwordCheck()) {
-    return false;
+  if (path !== undefined) {
+    storeFilePath = path;
   }
 
-  processRows('decrypt');
+  if (passwordFileExists()) {
+    readPasswordFile();
 
-  return true;
+    if (passwordValid()) {
+      processRows('decrypt');
+    } else {
+      throw new Error('Password invalid!');
+    }
+  }
 }
 
 function getPasswords() {
@@ -123,7 +121,7 @@ function deletePassword(id) {
 }
 
 function addPassword(web, un, pw) {
-  if (typeof passwords.list === 'undefined') {
+  if (passwords.list === undefined) {
     passwords.list = [];
   }
 
@@ -138,10 +136,8 @@ function reset() {
 }
 
 module.exports = {
-  setStoreFilePath,
-  setMainPassword,
   passwordFileExists,
-  passwordValid,
+  open,
   getPasswords,
   savePassword,
   deletePassword,
