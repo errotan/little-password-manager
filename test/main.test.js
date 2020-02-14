@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const assert = require('assert');
+const assert = require('assert').strict;
 const fs = require('fs').promises;
 const jsdomGlobal = require('jsdom-global');
 const EventEmitter = require('events');
@@ -30,7 +30,10 @@ describe('lpm.main', () => {
   after(async () => helper.deleteStoreFile());
 
   it('password again shown on first start', () => {
-    assert.ok(!document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden'));
+    assert.strictEqual(
+      document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden'),
+      false,
+    );
   });
 
   it('after login passwords are listed', () => {
@@ -38,7 +41,10 @@ describe('lpm.main', () => {
     document.getElementById('loginpassword2').value = tempPassword;
     document.getElementById('loginsubmit').click();
 
-    assert.equal(document.getElementsByClassName('table').item(0).classList.contains('hidden'), false);
+    assert.strictEqual(
+      document.getElementsByClassName('table').item(0).classList.contains('hidden'),
+      false,
+    );
   });
 
   it('adding entry creates row', () => {
@@ -49,7 +55,7 @@ describe('lpm.main', () => {
     inputs.item(5).value = 'pw';
     inputs.item(6).click();
 
-    assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
+    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
   });
 
   it('delete removes row', () => {
@@ -59,34 +65,37 @@ describe('lpm.main', () => {
     inputs.item(5).value = 'pw2';
     inputs.item(6).click();
 
-    assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 4);
+    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 4);
 
     const firstTrashIcon = document.getElementsByClassName('ion-md-trash').item(0);
     firstTrashIcon.dataset.confirmed = true;
     firstTrashIcon.click();
 
-    assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
+    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
   });
 
   it('clicking edit creates input fields', () => {
-    assert.equal(document.getElementsByClassName('form-control').length, 7);
+    assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
 
     document.getElementsByClassName('ion-md-create').item(0).click();
 
-    assert.equal(document.getElementsByClassName('form-control').length, 10);
+    assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
   });
 
   it('clicking cancel removes input fields', () => {
-    assert.equal(document.getElementsByClassName('form-control').length, 10);
+    assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
 
     document.getElementsByClassName('ion-md-close').item(0).click();
 
-    assert.equal(document.getElementsByClassName('form-control').length, 7);
+    assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
   });
 
   it('minimize clears table', () => {
     windowEmitter.on('minimize', () => {
-      assert.equal(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 2);
+      assert.strictEqual(
+        document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length,
+        2,
+      );
     });
 
     windowEmitter.emit('minimize');

@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const assert = require('assert');
+const assert = require('assert').strict;
 const fs = require('fs');
 const helper = require('./helper.js');
 const lpmStore = require('../src/store.js');
@@ -14,7 +14,7 @@ describe('lpm.store', () => {
   it('addPassword() should create store file', () => {
     lpmStore.open(testPassword, helper.tempStoreFile);
     lpmStore.addPassword('web', 'un', 'pw');
-    assert.ok(lpmStore.passwordFileExists());
+    assert(lpmStore.passwordFileExists());
   });
 
   it('getPasswords() should be array', () => {
@@ -41,7 +41,7 @@ describe('lpm.store', () => {
   it('savePassword() should alter password', () => {
     lpmStore.savePassword(0, 'web2', 'un2', 'pw2');
     const passwords = lpmStore.getPasswords();
-    assert.deepEqual(passwords[0].web, 'web2');
+    assert.strictEqual(passwords[0].web, 'web2');
   });
 
   it('deletePassword() should delete password', () => {
