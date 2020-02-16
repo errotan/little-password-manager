@@ -11,7 +11,6 @@ let clipboard;
 // DOM instance
 let dom;
 
-let storeFilePath;
 let confirmTarget;
 
 function displayText(title, text, isQuestion = false) {
@@ -165,6 +164,8 @@ function deletePassword(element) {
 function loginHandler() {
   const loginPassword = dom.getElementById('loginpassword');
 
+  lpmStore.open(loginPassword.value);
+
   if (!lpmStore.passwordFileExists()) {
     const loginPassword2 = dom.getElementById('loginpassword2');
 
@@ -190,8 +191,6 @@ function loginHandler() {
   }
 
   try {
-    lpmStore.open(loginPassword.value, storeFilePath);
-
     // clear password field
     loginPassword.value = '';
 
@@ -303,7 +302,7 @@ function logout() {
 
   mainTable.classList.add('d-none');
 
-  lpmStore.reset();
+  lpmStore.close();
 
   // clear password list table
   clearMainTable();
@@ -330,7 +329,7 @@ function init(nw, clip, doc, filePath) {
   dom = doc;
 
   if (filePath !== undefined) {
-    storeFilePath = filePath;
+    lpmStore.setFilePath(filePath);
   }
 
   attachWindowHandlers();

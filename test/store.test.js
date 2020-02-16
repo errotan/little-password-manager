@@ -8,11 +8,14 @@ const lpmStore = require('../src/store.js');
 const testPassword = '123password';
 
 describe('lpm.store', () => {
-  before(async () => helper.deleteStoreFile());
+  before(async () => {
+    await helper.deleteStoreFile();
+    lpmStore.setFilePath(helper.tempStoreFile);
+    lpmStore.open(testPassword);
+  });
   after(async () => helper.deleteStoreFile());
 
   it('addPassword() should create store file', () => {
-    lpmStore.open(testPassword, helper.tempStoreFile);
     lpmStore.addPassword('web', 'un', 'pw');
     assert(lpmStore.passwordFileExists());
   });

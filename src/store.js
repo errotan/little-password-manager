@@ -4,12 +4,16 @@ const fs = require('fs');
 const CryptoJS = require('crypto-js');
 
 let storeFilePath = 'passwords.json';
+let mainPassword;
+let passwords;
 
-// main password used for encryption/decryption
-let mainPassword = '';
+function setFilePath(path) {
+  if (passwords) {
+    throw new Error('Close store before changing path!');
+  }
 
-// this object holds all passwords
-let passwords = {};
+  storeFilePath = path;
+}
 
 function passwordFileExists() {
   return fs.existsSync(storeFilePath);
@@ -72,12 +76,8 @@ function processRows(type) {
   }
 }
 
-function open(password, path) {
+function open(password) {
   mainPassword = password;
-
-  if (path !== undefined) {
-    storeFilePath = path;
-  }
 
   if (passwordFileExists()) {
     readPasswordFile();
@@ -87,10 +87,20 @@ function open(password, path) {
     } else {
       throw new Error('Password invalid!');
     }
+  } else {
+    passwords = {};
+  }
+}
+
+function checkOpen() {
+  if (!passwords) {
+    throw new Error('Store must be opened first!');
   }
 }
 
 function getPasswords() {
+  checkOpen();
+
   return passwords.list;
 }
 
@@ -107,6 +117,8 @@ function savePasswords() {
 }
 
 function savePassword(id, web, un, pw) {
+  checkOpen();
+
   passwords.list[id].web = web;
   passwords.list[id].un = un;
   passwords.list[id].pw = pw;
@@ -115,12 +127,16 @@ function savePassword(id, web, un, pw) {
 }
 
 function deletePassword(id) {
+  checkOpen();
+
   passwords.list.splice(id, 1);
 
   savePasswords();
 }
 
 function addPassword(web, un, pw) {
+  checkOpen();
+
   if (passwords.list === undefined) {
     passwords.list = [];
   }
@@ -130,17 +146,18 @@ function addPassword(web, un, pw) {
   savePasswords();
 }
 
-function reset() {
-  mainPassword = '';
-  passwords = {};
+function close() {
+  mainPassword = null;
+  passwords = null;
 }
 
 module.exports = {
+  setFilePath,
   passwordFileExists,
   open,
   getPasswords,
   savePassword,
   deletePassword,
   addPassword,
-  reset,
+  close,
 };
