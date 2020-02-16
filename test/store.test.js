@@ -1,7 +1,7 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 const assert = require('assert').strict;
-const fs = require('fs');
+const fs = require('fs').promises;
 const helper = require('./helper.js');
 const lpmStore = require('../src/store.js');
 
@@ -51,8 +51,8 @@ describe('lpm.store', () => {
     assert(typeof passwords[1] === 'undefined');
   });
 
-  it('open() should throw error if store is corrupt', () => {
-    fs.writeFileSync(helper.tempStoreFile, 'invalid content', 'utf8');
+  it('open() should throw error if store is corrupt', async () => {
+    await fs.writeFile(helper.tempStoreFile, 'invalid content');
 
     assert.throws(
       () => {
