@@ -164,7 +164,12 @@ async function deletePassword(element) {
 async function loginHandler() {
   const loginPassword = dom.getElementById('loginpassword');
 
-  await lpmStore.open(loginPassword.value);
+  try {
+    await lpmStore.open(loginPassword.value);
+  } catch (e) {
+    displayError(e);
+    return;
+  }
 
   if (!await lpmStore.passwordFileExists()) {
     const loginPassword2 = dom.getElementById('loginpassword2');
@@ -190,17 +195,13 @@ async function loginHandler() {
     return;
   }
 
-  try {
-    // clear password field
-    loginPassword.value = '';
+  // clear password field
+  loginPassword.value = '';
 
-    // maximize window
-    win.maximize();
+  // maximize window
+  win.maximize();
 
-    drawPasswordList();
-  } catch (e) {
-    displayError(e);
-  }
+  drawPasswordList();
 }
 
 // new password save handler
