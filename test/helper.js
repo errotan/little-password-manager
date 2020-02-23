@@ -12,7 +12,17 @@ async function deleteStoreFile() {
   }
 }
 
+function mutationObserve(targetNode, callback) {
+  const observer = new window.MutationObserver(() => {
+    callback();
+    observer.disconnect();
+  });
+
+  observer.observe(targetNode, { childList: true, subtree: true });
+}
+
 module.exports = {
   tempStoreFile,
   deleteStoreFile,
+  mutationObserve,
 };

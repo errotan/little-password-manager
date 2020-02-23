@@ -132,14 +132,14 @@ function editPassword(element) {
 }
 
 // save edited password
-function saveEditedPassword(element) {
+async function saveEditedPassword(element) {
   const tr = element.parentElement.parentElement;
   const input = tr.getElementsByTagName('input');
   confirmTarget = element;
 
   if ('confirmed' in confirmTarget.dataset) {
     delete confirmTarget.dataset.confirmed;
-    lpmStore
+    await lpmStore
       .savePassword(tr.dataset.id, input.item(0).value, input.item(1).value, input.item(2).value);
     drawPasswordList();
   } else {
@@ -148,12 +148,12 @@ function saveEditedPassword(element) {
 }
 
 // password delete handler
-function deletePassword(element) {
+async function deletePassword(element) {
   confirmTarget = element;
 
   if ('confirmed' in confirmTarget.dataset) {
     delete confirmTarget.dataset.confirmed;
-    lpmStore.deletePassword(element.parentElement.parentElement.dataset.id);
+    await lpmStore.deletePassword(element.parentElement.parentElement.dataset.id);
     drawPasswordList();
   } else {
     displayQuestion('Do you really want to delete this data?');
@@ -161,12 +161,12 @@ function deletePassword(element) {
 }
 
 // login handler
-function loginHandler() {
+async function loginHandler() {
   const loginPassword = dom.getElementById('loginpassword');
 
-  lpmStore.open(loginPassword.value);
+  await lpmStore.open(loginPassword.value);
 
-  if (!lpmStore.passwordFileExists()) {
+  if (!await lpmStore.passwordFileExists()) {
     const loginPassword2 = dom.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
@@ -204,11 +204,11 @@ function loginHandler() {
 }
 
 // new password save handler
-function saveNewPassword() {
+async function saveNewPassword() {
   const inputFields = dom.getElementsByTagName('table').item(0).getElementsByTagName('input');
 
   if ((inputFields[0].value !== '' || inputFields[1].value !== '') && inputFields[2].value) {
-    lpmStore.addPassword(inputFields[0].value, inputFields[1].value, inputFields[2].value);
+    await lpmStore.addPassword(inputFields[0].value, inputFields[1].value, inputFields[2].value);
 
     // clear fields
     inputFields[0].value = '';
@@ -278,10 +278,10 @@ function addListeners() {
 }
 
 // password again shower/hider for first time run
-function passwordAgainFieldHandler() {
+async function passwordAgainFieldHandler() {
   const passwordDiv = dom.getElementsByClassName('js-password-again').item(0);
   const loginSubmit = dom.getElementById('loginsubmit');
-  const passwordFileExists = lpmStore.passwordFileExists();
+  const passwordFileExists = await lpmStore.passwordFileExists();
 
   if (passwordFileExists) {
     passwordDiv.classList.add('d-none');

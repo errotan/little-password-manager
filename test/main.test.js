@@ -49,29 +49,38 @@ describe('lpm.main', () => {
 
   it('adding entry creates row', () => {
     const inputs = document.getElementsByClassName('form-control');
+    const table = document.getElementsByTagName('table').item(0);
 
     inputs.item(3).value = 'un';
     inputs.item(4).value = 'web';
     inputs.item(5).value = 'pw';
     inputs.item(6).click();
 
-    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
+    helper.mutationObserve(table, () => {
+      assert.strictEqual(table.getElementsByTagName('tr').length, 3);
+    });
   });
 
-  it('delete removes row', () => {
+  it('delete removes row', (done) => {
     const inputs = document.getElementsByClassName('form-control');
+    const table = document.getElementsByTagName('table').item(0);
 
     inputs.item(3).value = 'un2';
     inputs.item(5).value = 'pw2';
     inputs.item(6).click();
 
-    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 4);
+    helper.mutationObserve(table, () => {
+      assert.strictEqual(table.getElementsByTagName('tr').length, 4);
 
-    const firstTrashIcon = document.getElementsByClassName('ion-md-trash').item(0);
-    firstTrashIcon.dataset.confirmed = true;
-    firstTrashIcon.click();
+      const firstTrashIcon = document.getElementsByClassName('ion-md-trash').item(0);
+      firstTrashIcon.dataset.confirmed = true;
+      firstTrashIcon.click();
 
-    assert.strictEqual(document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length, 3);
+      helper.mutationObserve(table, () => {
+        assert.strictEqual(table.getElementsByTagName('tr').length, 3);
+        done();
+      });
+    });
   });
 
   it('clicking edit creates input fields', () => {

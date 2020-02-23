@@ -11,38 +11,39 @@ describe('lpm.store', () => {
   before(async () => {
     await helper.deleteStoreFile();
     lpmStore.setFilePath(helper.tempStoreFile);
-    lpmStore.open(testPassword);
+    await lpmStore.open(testPassword);
   });
   after(async () => helper.deleteStoreFile());
 
-  it('addPassword() should create store file', () => {
-    lpmStore.addPassword('web', 'un', 'pw');
-    assert(lpmStore.passwordFileExists());
+  it('addPassword() should create store file', async () => {
+    await lpmStore.addPassword('web', 'un', 'pw');
+    assert(await lpmStore.passwordFileExists());
   });
 
   it('getPasswords() should be array', () => {
     assert(typeof lpmStore.getPasswords() === 'object');
   });
 
-  it('open() must throw error if password is incorrect', () => {
-    assert.throws(
-      () => {
-        lpmStore.open('incorrect pass', helper.tempStoreFile);
-      },
-      /invalid/,
-    );
+  it('open() must throw error if password is incorrect', async () => {
+    try {
+      await lpmStore.open('incorrect pass');
+      assert.fail();
+    } catch (error) {
+      assert(error.toString().indexOf('invalid') !== -1);
+    }
   });
 
-  it('open() must not throw error if password is correct', () => {
-    assert.doesNotThrow(
-      () => {
-        lpmStore.open(testPassword, helper.tempStoreFile);
-      },
-    );
+  it('open() must not throw error if password is correct', async () => {
+    try {
+      await lpmStore.open(testPassword);
+      assert.ok(true);
+    } catch (error) {
+      assert.fail();
+    }
   });
 
-  it('savePassword() should alter password', () => {
-    lpmStore.savePassword(0, 'web2', 'un2', 'pw2');
+  it('savePassword() should alter password', async () => {
+    await lpmStore.savePassword(0, 'web2', 'un2', 'pw2');
     const passwords = lpmStore.getPasswords();
     assert.strictEqual(passwords[0].web, 'web2');
   });
@@ -57,11 +58,11 @@ describe('lpm.store', () => {
   it('open() should throw error if store is corrupt', async () => {
     await fs.writeFile(helper.tempStoreFile, 'invalid content');
 
-    assert.throws(
-      () => {
-        lpmStore.open(testPassword, helper.tempStoreFile);
-      },
-      /corrupted/,
-    );
+    try {
+      await lpmStore.open(testPassword);
+      assert.fail();
+    } catch (error) {
+      assert(error.toString().indexOf('corrupted') !== -1);
+    }
   });
 });

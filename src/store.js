@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const fs = require('fs');
+const fs = require('fs').promises;
 const CryptoJS = require('crypto-js');
 
 let storeFilePath = 'passwords.json';
@@ -15,13 +15,24 @@ function setFilePath(path) {
   storeFilePath = path;
 }
 
-function passwordFileExists() {
-  return fs.existsSync(storeFilePath);
+async function passwordFileExists() {
+  try {
+    await fs.access(storeFilePath);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 // read password file, parse and load to passwords object
-function readPasswordFile() {
-  const data = fs.readFileSync(storeFilePath, 'utf8');
+async function readPasswordFile() {
+  let data;
+
+  try {
+    data = await fs.readFile(storeFilePath, 'utf8');
+  } catch (e) {
+    throw new Error('Fatal error! Can\'t read password file!');
+  }
 
   try {
     passwords = JSON.parse(data);
@@ -76,15 +87,19 @@ function processRows(type) {
   }
 }
 
-function open(password) {
+async function open(password) {
   mainPassword = password;
 
-  if (passwordFileExists()) {
-    readPasswordFile();
+  if (await passwordFileExists()) {
+    await readPasswordFile();
 
-    if (passwordValid()) {
-      processRows('decrypt');
-    } else {
+    try {
+      if (passwordValid()) {
+        processRows('decrypt');
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
       throw new Error('Password invalid!');
     }
   } else {
@@ -105,36 +120,40 @@ function getPasswords() {
 }
 
 // save passwords to json file
-function savePasswords() {
+async function savePasswords() {
   // sort array
   passwords.list.sort((a, b) => a.web.localeCompare(b.web));
 
   processRows('encrypt');
 
-  fs.writeFileSync(storeFilePath, JSON.stringify(passwords), 'utf8');
+  try {
+    await fs.writeFile(storeFilePath, JSON.stringify(passwords), 'utf8');
+  } catch (error) {
+    throw new Error('Fatal error! Can\'t save password file!');
+  }
 
   processRows('decrypt');
 }
 
-function savePassword(id, web, un, pw) {
+async function savePassword(id, web, un, pw) {
   checkOpen();
 
   passwords.list[id].web = web;
   passwords.list[id].un = un;
   passwords.list[id].pw = pw;
 
-  savePasswords();
+  await savePasswords();
 }
 
-function deletePassword(id) {
+async function deletePassword(id) {
   checkOpen();
 
   passwords.list.splice(id, 1);
 
-  savePasswords();
+  await savePasswords();
 }
 
-function addPassword(web, un, pw) {
+async function addPassword(web, un, pw) {
   checkOpen();
 
   if (passwords.list === undefined) {
@@ -143,7 +162,7 @@ function addPassword(web, un, pw) {
 
   passwords.list.push({ web, un, pw });
 
-  savePasswords();
+  await savePasswords();
 }
 
 function close() {
