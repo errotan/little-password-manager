@@ -1,11 +1,11 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const assert = require('assert').strict;
-const fs = require('fs').promises;
-const jsdomGlobal = require('jsdom-global');
-const EventEmitter = require('events');
-const helper = require('./helper.js');
-const lpmMain = require('../src/main.js');
+import { strict as assert } from 'assert';
+import { promises as fs } from 'fs';
+import jsdomGlobal from 'jsdom-global';
+import { EventEmitter } from 'events';
+import helper from './helper';
+import lpmMain from '../src/main';
 
 class WindowEmitter extends EventEmitter {
   maximize() {
@@ -21,7 +21,7 @@ describe('lpm.main', () => {
     await helper.deleteStoreFile();
 
     // create browser env
-    jsdomGlobal(await fs.readFile('src/index.html', 'utf8'));
+    jsdomGlobal(await fs.readFile('index.html', 'utf8'));
 
     // call init
     lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
@@ -37,8 +37,8 @@ describe('lpm.main', () => {
   });
 
   it('after login passwords are listed', () => {
-    document.getElementById('loginpassword').value = tempPassword;
-    document.getElementById('loginpassword2').value = tempPassword;
+    (<HTMLInputElement>document.getElementById('loginpassword')).value = tempPassword;
+    (<HTMLInputElement>document.getElementById('loginpassword2')).value = tempPassword;
     document.getElementById('loginsubmit').click();
 
     assert.strictEqual(
@@ -51,10 +51,10 @@ describe('lpm.main', () => {
     const inputs = document.getElementsByClassName('form-control');
     const table = document.getElementsByTagName('table').item(0);
 
-    inputs.item(3).value = 'un';
-    inputs.item(4).value = 'web';
-    inputs.item(5).value = 'pw';
-    inputs.item(6).click();
+    (<HTMLInputElement>inputs.item(3)).value = 'un';
+    (<HTMLInputElement>inputs.item(4)).value = 'web';
+    (<HTMLInputElement>inputs.item(5)).value = 'pw';
+    (<HTMLInputElement>inputs.item(6)).click();
 
     helper.mutationObserve(table, () => {
       assert.strictEqual(table.getElementsByTagName('tr').length, 3);
@@ -65,15 +65,15 @@ describe('lpm.main', () => {
     const inputs = document.getElementsByClassName('form-control');
     const table = document.getElementsByTagName('table').item(0);
 
-    inputs.item(3).value = 'un2';
-    inputs.item(5).value = 'pw2';
-    inputs.item(6).click();
+    (<HTMLInputElement>inputs.item(3)).value = 'un2';
+    (<HTMLInputElement>inputs.item(5)).value = 'pw2';
+    (<HTMLElement>inputs.item(6)).click();
 
     helper.mutationObserve(table, () => {
       assert.strictEqual(table.getElementsByTagName('tr').length, 4);
 
-      const firstTrashIcon = document.getElementsByClassName('ion-md-trash').item(0);
-      firstTrashIcon.dataset.confirmed = true;
+      const firstTrashIcon = (<HTMLElement>document.getElementsByClassName('ion-md-trash').item(0));
+      firstTrashIcon.dataset['confirmed'] = <string><unknown>true;
       firstTrashIcon.click();
 
       helper.mutationObserve(table, () => {
@@ -86,7 +86,7 @@ describe('lpm.main', () => {
   it('clicking edit creates input fields', () => {
     assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
 
-    document.getElementsByClassName('ion-md-create').item(0).click();
+    (<HTMLElement>document.getElementsByClassName('ion-md-create').item(0)).click();
 
     assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
   });
@@ -94,7 +94,7 @@ describe('lpm.main', () => {
   it('clicking cancel removes input fields', () => {
     assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
 
-    document.getElementsByClassName('ion-md-close').item(0).click();
+    (<HTMLElement>document.getElementsByClassName('ion-md-close').item(0)).click();
 
     assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
   });

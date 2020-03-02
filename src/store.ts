@@ -1,7 +1,7 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const fs = require('fs').promises;
-const CryptoJS = require('crypto-js');
+import { promises as fs } from 'fs';
+import CryptoJS from 'crypto-js';
 
 let storeFilePath = 'passwords.json';
 let mainPassword;
@@ -170,7 +170,7 @@ function close() {
   passwords = null;
 }
 
-module.exports = {
+export = {
   setFilePath,
   passwordFileExists,
   open,
@@ -179,4 +179,4 @@ module.exports = {
   deletePassword,
   addPassword,
   close,
-};
+}

@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const lpmStore = require('./store');
+import lpmStore from './store';
 
 // nw window instance
 let win;
@@ -324,7 +324,7 @@ function attachWindowHandlers() {
   });
 }
 
-function init(nw, clip, doc, filePath) {
+export = function init(nw, clip, doc, filePath) {
   win = nw;
   clipboard = clip;
   dom = doc;
@@ -337,5 +337,3 @@ function init(nw, clip, doc, filePath) {
   passwordAgainFieldHandler();
   addListeners();
 }
-
-module.exports = init;

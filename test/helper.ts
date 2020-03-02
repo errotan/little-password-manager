@@ -1,6 +1,6 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const fs = require('fs').promises;
+import { promises as fs } from 'fs';
 
 const tempStoreFile = 'passwords.test.json';
 
@@ -21,7 +21,7 @@ function mutationObserve(targetNode, callback) {
   observer.observe(targetNode, { childList: true, subtree: true });
 }
 
-module.exports = {
+export = {
   tempStoreFile,
   deleteStoreFile,
   mutationObserve,

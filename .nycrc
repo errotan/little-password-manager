@@ -1,9 +1,6 @@
 {
   "include": [
-    "src/*.js"
-  ],
-  "exclude": [
-    "src/index.js"
+    "build/src/*.js"
   ],
   "cache": true,
   "all": true

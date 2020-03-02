@@ -1,9 +1,9 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
-const assert = require('assert').strict;
-const fs = require('fs').promises;
-const helper = require('./helper.js');
-const lpmStore = require('../src/store.js');
+import { strict as assert } from 'assert';
+import { promises as fs } from 'fs';
+import helper from './helper';
+import lpmStore from '../src/store';
 
 const testPassword = '123password';
 
