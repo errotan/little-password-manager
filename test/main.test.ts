@@ -6,14 +6,20 @@ import jsdomGlobal from 'jsdom-global';
 import { EventEmitter } from 'events';
 import helper from './helper';
 import lpmMain from '../src/main';
+import { NwWindow, NwClipboard } from '../spec/nw';
 
-class WindowEmitter extends EventEmitter {
+class Window extends EventEmitter {
   maximize() {
   }
 }
 
-const windowEmitter = new WindowEmitter();
-const clipboardEmitter = new EventEmitter();
+class Clipboard {
+  set(data: string) {
+  }
+}
+
+const windowEmitter = new Window();
+const clipboard = new Clipboard();
 const tempPassword = 'secret54321';
 
 describe('lpm.main', () => {
@@ -24,37 +30,37 @@ describe('lpm.main', () => {
     jsdomGlobal(await fs.readFile('index.html', 'utf8'));
 
     // call init
-    lpmMain(windowEmitter, clipboardEmitter, document, helper.tempStoreFile);
+    lpmMain((<NwWindow> windowEmitter), (<NwClipboard> clipboard), document, helper.tempStoreFile);
   });
 
   after(async () => helper.deleteStoreFile());
 
   it('password again shown on first start', () => {
     assert.strictEqual(
-      document.getElementsByClassName('js-password-again').item(0).classList.contains('hidden'),
+      document.getElementsByClassName('js-password-again').item(0)!.classList.contains('hidden'),
       false,
     );
   });
 
   it('after login passwords are listed', () => {
-    (<HTMLInputElement>document.getElementById('loginpassword')).value = tempPassword;
-    (<HTMLInputElement>document.getElementById('loginpassword2')).value = tempPassword;
-    document.getElementById('loginsubmit').click();
+    (<HTMLInputElement> document.getElementById('loginpassword')).value = tempPassword;
+    (<HTMLInputElement> document.getElementById('loginpassword2')).value = tempPassword;
+    document.getElementById('loginsubmit')!.click();
 
     assert.strictEqual(
-      document.getElementsByClassName('table').item(0).classList.contains('hidden'),
+      document.getElementsByClassName('table').item(0)!.classList.contains('hidden'),
       false,
     );
   });
 
   it('adding entry creates row', () => {
     const inputs = document.getElementsByClassName('form-control');
-    const table = document.getElementsByTagName('table').item(0);
+    const table = document.getElementsByTagName('table').item(0)!;
 
-    (<HTMLInputElement>inputs.item(3)).value = 'un';
-    (<HTMLInputElement>inputs.item(4)).value = 'web';
-    (<HTMLInputElement>inputs.item(5)).value = 'pw';
-    (<HTMLInputElement>inputs.item(6)).click();
+    (<HTMLInputElement> inputs.item(3)).value = 'un';
+    (<HTMLInputElement> inputs.item(4)).value = 'web';
+    (<HTMLInputElement> inputs.item(5)).value = 'pw';
+    (<HTMLInputElement> inputs.item(6)).click();
 
     helper.mutationObserve(table, () => {
       assert.strictEqual(table.getElementsByTagName('tr').length, 3);
@@ -63,17 +69,17 @@ describe('lpm.main', () => {
 
   it('delete removes row', (done) => {
     const inputs = document.getElementsByClassName('form-control');
-    const table = document.getElementsByTagName('table').item(0);
+    const table = document.getElementsByTagName('table').item(0)!;
 
-    (<HTMLInputElement>inputs.item(3)).value = 'un2';
-    (<HTMLInputElement>inputs.item(5)).value = 'pw2';
-    (<HTMLElement>inputs.item(6)).click();
+    (<HTMLInputElement> inputs.item(3)).value = 'un2';
+    (<HTMLInputElement> inputs.item(5)).value = 'pw2';
+    (<HTMLElement> inputs.item(6)).click();
 
     helper.mutationObserve(table, () => {
       assert.strictEqual(table.getElementsByTagName('tr').length, 4);
 
-      const firstTrashIcon = (<HTMLElement>document.getElementsByClassName('ion-md-trash').item(0));
-      firstTrashIcon.dataset['confirmed'] = <string><unknown>true;
+      const firstTrashIcon = (<HTMLElement> document.getElementsByClassName('ion-md-trash').item(0));
+      firstTrashIcon.dataset.confirmed = <string><unknown> true;
       firstTrashIcon.click();
 
       helper.mutationObserve(table, () => {
@@ -86,7 +92,7 @@ describe('lpm.main', () => {
   it('clicking edit creates input fields', () => {
     assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
 
-    (<HTMLElement>document.getElementsByClassName('ion-md-create').item(0)).click();
+    (<HTMLElement> document.getElementsByClassName('ion-md-create').item(0)).click();
 
     assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
   });
@@ -94,7 +100,7 @@ describe('lpm.main', () => {
   it('clicking cancel removes input fields', () => {
     assert.strictEqual(document.getElementsByClassName('form-control').length, 10);
 
-    (<HTMLElement>document.getElementsByClassName('ion-md-close').item(0)).click();
+    (<HTMLElement> document.getElementsByClassName('ion-md-close').item(0)).click();
 
     assert.strictEqual(document.getElementsByClassName('form-control').length, 7);
   });
@@ -102,7 +108,7 @@ describe('lpm.main', () => {
   it('minimize clears table', () => {
     windowEmitter.on('minimize', () => {
       assert.strictEqual(
-        document.getElementsByTagName('table').item(0).getElementsByTagName('tr').length,
+        document.getElementsByTagName('table').item(0)!.getElementsByTagName('tr').length,
         2,
       );
     });

@@ -1,20 +1,21 @@
 //! Copyright (c) 2017-2020 Puskás Zsolt <errotan@gmail.com> See LICENSE file for conditions.
 
 import lpmStore from './store';
+import { NwWindow, NwClipboard } from '../spec/nw';
 
 // nw window instance
-let win;
+let win: NwWindow;
 
 // nw clipboard instance
-let clipboard;
+let clipboard: NwClipboard;
 
 // DOM instance
-let dom;
+let dom: Document;
 
-let confirmTarget;
+let confirmTarget: HTMLElement;
 
-function displayText(title, text, isQuestion = false) {
-  const confirmButton = dom.getElementById('confirm_button').classList;
+function displayText(title: string, text: string, isQuestion: boolean = false) {
+  const confirmButton = dom.getElementById('confirm_button')!.classList;
 
   if (isQuestion) {
     confirmButton.remove('d-none');
@@ -22,62 +23,62 @@ function displayText(title, text, isQuestion = false) {
     confirmButton.add('d-none');
   }
 
-  dom.getElementsByClassName('modal-title').item(0).innerHTML = title;
-  dom.getElementsByClassName('modal-body').item(0).innerHTML = text;
-  dom.getElementById('modal_button').click();
+  dom.getElementsByClassName('modal-title').item(0)!.innerHTML = title;
+  dom.getElementsByClassName('modal-body').item(0)!.innerHTML = text;
+  dom.getElementById('modal_button')!.click();
 }
 
-function displayNotice(text) {
+function displayNotice(text: string) {
   displayText('Notice', text);
 }
 
-function displayError(text) {
+function displayError(text: string) {
   displayText('Error', text);
 }
 
-function displayQuestion(text) {
+function displayQuestion(text: string) {
   displayText('Question', text, true);
 }
 
 // clear password list table
 function clearMainTable() {
   const mainTableTbody = dom.getElementsByTagName('table')
-    .item(0)
+    .item(0)!
     .getElementsByTagName('tbody')
     .item(0);
-  const passwordRows = mainTableTbody.getElementsByTagName('tr');
+  const passwordRows = mainTableTbody!.getElementsByTagName('tr');
 
   for (let i = passwordRows.length - 2; i >= 0; i -= 1) {
-    mainTableTbody.removeChild(passwordRows[i]);
+    mainTableTbody!.removeChild(passwordRows[i]);
   }
 }
 
-function copyToClipboard(element) {
-  clipboard.set(element.parentElement.parentElement.dataset.pw);
+function copyToClipboard(element: HTMLElement) {
+  clipboard.set(<string> element.parentElement!.parentElement!.dataset.pw);
   displayNotice('Password copied!');
 }
 
 // password shower
-function showHidePassword(element) {
-  const tr = element.parentElement.parentElement;
+function showHidePassword(element: HTMLElement) {
+  const tr = (<HTMLTableRowElement> element.parentElement!.parentElement);
 
   if (element.classList.contains('ion-md-eye')) {
     element.classList.remove('ion-md-eye');
     element.classList.add('ion-md-eye-off');
 
-    tr.cells.item(2).innerHTML = tr.dataset.pw;
+    tr.cells.item(2)!.innerHTML = <string> tr.dataset.pw;
   } else {
     element.classList.remove('ion-md-eye-off');
     element.classList.add('ion-md-eye');
 
-    tr.cells.item(2).innerHTML = '***';
+    tr.cells.item(2)!.innerHTML = '***';
   }
 }
 
 // draw password list table
 function drawPasswordList() {
   // hide login form
-  dom.getElementsByTagName('form').item(0).classList.add('d-none');
+  dom.getElementsByTagName('form').item(0)!.classList.add('d-none');
 
   // clear password list table
   clearMainTable();
@@ -85,15 +86,15 @@ function drawPasswordList() {
   // show password list table
   const mainTable = dom.getElementsByTagName('table').item(0);
 
-  mainTable.classList.remove('d-none');
+  mainTable!.classList.remove('d-none');
 
   const passwords = lpmStore.getPasswords();
 
   if (passwords !== undefined) {
-    const mainTableBody = mainTable.getElementsByTagName('tbody').item(0);
+    const mainTableBody = mainTable!.getElementsByTagName('tbody').item(0);
 
     for (let i = 0; i < passwords.length; i += 1) {
-      const row = mainTableBody.insertRow(i);
+      const row = mainTableBody!.insertRow(i);
       const cell1 = row.insertCell(0);
       const cell2 = row.insertCell(1);
       const cell3 = row.insertCell(2);
@@ -103,7 +104,7 @@ function drawPasswordList() {
       cell4.classList.add('text-center');
 
       // save id
-      row.dataset.id = i;
+      row.dataset.id = <string><unknown> i;
 
       // save datas
       row.dataset.web = passwords[i].web;
@@ -122,25 +123,29 @@ function drawPasswordList() {
 }
 
 // make input fields for password row edit
-function editPassword(element) {
-  const tr = element.parentElement.parentElement;
+function editPassword(element: HTMLElement) {
+  const tr = (<HTMLTableRowElement> element.parentElement!.parentElement);
 
-  tr.cells.item(0).innerHTML = `<input class="form-control" type="text" value="${tr.dataset.web}" />`;
-  tr.cells.item(1).innerHTML = `<input class="form-control" type="text" value="${tr.dataset.un}" />`;
-  tr.cells.item(2).innerHTML = `<input class="form-control" type="text" value="${tr.dataset.pw}" />`;
-  tr.cells.item(3).innerHTML = '<i class="icon ion-md-checkmark"></i> <i class="icon ion-md-close"></i>';
+  tr.cells.item(0)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.web}" />`;
+  tr.cells.item(1)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.un}" />`;
+  tr.cells.item(2)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.pw}" />`;
+  tr.cells.item(3)!.innerHTML = '<i class="icon ion-md-checkmark"></i> <i class="icon ion-md-close"></i>';
 }
 
 // save edited password
-async function saveEditedPassword(element) {
-  const tr = element.parentElement.parentElement;
+async function saveEditedPassword(element: HTMLElement) {
+  const tr = (<HTMLTableRowElement> element.parentElement!.parentElement);
   const input = tr.getElementsByTagName('input');
   confirmTarget = element;
 
   if ('confirmed' in confirmTarget.dataset) {
     delete confirmTarget.dataset.confirmed;
-    await lpmStore
-      .savePassword(tr.dataset.id, input.item(0).value, input.item(1).value, input.item(2).value);
+    await lpmStore.savePassword(
+      <number><unknown> tr.dataset.id,
+      input.item(0)!.value,
+      input.item(1)!.value,
+      input.item(2)!.value
+    );
     drawPasswordList();
   } else {
     displayQuestion('Do you really want to save this data?');
@@ -148,12 +153,12 @@ async function saveEditedPassword(element) {
 }
 
 // password delete handler
-async function deletePassword(element) {
+async function deletePassword(element: HTMLElement) {
   confirmTarget = element;
 
   if ('confirmed' in confirmTarget.dataset) {
     delete confirmTarget.dataset.confirmed;
-    await lpmStore.deletePassword(element.parentElement.parentElement.dataset.id);
+    await lpmStore.deletePassword(<number><unknown> element.parentElement!.parentElement!.dataset.id);
     drawPasswordList();
   } else {
     displayQuestion('Do you really want to delete this data?');
@@ -162,7 +167,7 @@ async function deletePassword(element) {
 
 // login handler
 async function loginHandler() {
-  const loginPassword = dom.getElementById('loginpassword');
+  const loginPassword = <HTMLInputElement> dom.getElementById('loginpassword');
 
   try {
     await lpmStore.open(loginPassword.value);
@@ -172,7 +177,7 @@ async function loginHandler() {
   }
 
   if (!await lpmStore.passwordFileExists()) {
-    const loginPassword2 = dom.getElementById('loginpassword2');
+    const loginPassword2 = <HTMLInputElement> dom.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
       displayNotice('Password needs to be atleast 8 character long!');
@@ -206,7 +211,7 @@ async function loginHandler() {
 
 // new password save handler
 async function saveNewPassword() {
-  const inputFields = dom.getElementsByTagName('table').item(0).getElementsByTagName('input');
+  const inputFields = dom.getElementsByTagName('table').item(0)!.getElementsByTagName('input');
 
   if ((inputFields[0].value !== '' || inputFields[1].value !== '') && inputFields[2].value) {
     await lpmStore.addPassword(inputFields[0].value, inputFields[1].value, inputFields[2].value);
@@ -228,39 +233,41 @@ async function saveNewPassword() {
 function addListeners() {
   // click handlers
   dom.addEventListener('click', (e) => {
+    const clickTarget = <HTMLElement> e.target;
+
     // delete event
-    if (e.target.classList.contains('ion-md-clipboard')) {
-      copyToClipboard(e.target);
+    if (clickTarget.classList.contains('ion-md-clipboard')) {
+      copyToClipboard(clickTarget);
     }
 
     // show/hide event
-    if (e.target.classList.contains('ion-md-eye') || e.target.classList.contains('ion-md-eye-off')) {
-      showHidePassword(e.target);
+    if (clickTarget.classList.contains('ion-md-eye') || clickTarget.classList.contains('ion-md-eye-off')) {
+      showHidePassword(clickTarget);
     }
 
     // edit event
-    if (e.target.classList.contains('ion-md-create')) {
-      editPassword(e.target);
+    if (clickTarget.classList.contains('ion-md-create')) {
+      editPassword(clickTarget);
     }
 
     // edit finish event
-    if (e.target.classList.contains('ion-md-checkmark')) {
-      saveEditedPassword(e.target);
+    if (clickTarget.classList.contains('ion-md-checkmark')) {
+      saveEditedPassword(clickTarget);
     }
 
     // edit cancel event
-    if (e.target.classList.contains('ion-md-close')) {
+    if (clickTarget.classList.contains('ion-md-close')) {
       drawPasswordList();
     }
 
     // delete event
-    if (e.target.classList.contains('ion-md-trash')) {
-      deletePassword(e.target);
+    if (clickTarget.classList.contains('ion-md-trash')) {
+      deletePassword(clickTarget);
     }
 
     // confirm event
-    if (e.target.id === 'confirm_button' && confirmTarget) {
-      confirmTarget.dataset.confirmed = true;
+    if (clickTarget.id === 'confirm_button' && confirmTarget) {
+      confirmTarget.dataset.confirmed = <string><unknown> true;
       confirmTarget.click();
     }
   });
@@ -270,7 +277,7 @@ function addListeners() {
     // prevent page navigation
     e.preventDefault();
 
-    if (typeof e.target.dataset.login !== 'undefined') {
+    if (typeof (<HTMLFormElement> e.target).dataset.login !== 'undefined') {
       loginHandler();
     } else {
       saveNewPassword();
@@ -280,8 +287,8 @@ function addListeners() {
 
 // password again shower/hider for first time run
 async function passwordAgainFieldHandler() {
-  const passwordDiv = dom.getElementsByClassName('js-password-again').item(0);
-  const loginSubmit = dom.getElementById('loginsubmit');
+  const passwordDiv = dom.getElementsByClassName('js-password-again').item(0)!;
+  const loginSubmit = (<HTMLInputElement> dom.getElementById('loginsubmit'));
   const passwordFileExists = await lpmStore.passwordFileExists();
 
   if (passwordFileExists) {
@@ -296,10 +303,10 @@ async function passwordAgainFieldHandler() {
 // logout handler
 function logout() {
   // show login form
-  dom.getElementsByTagName('form').item(0).classList.remove('d-none');
+  dom.getElementsByTagName('form').item(0)!.classList.remove('d-none');
 
   // hide password list table
-  const mainTable = dom.getElementsByTagName('table').item(0);
+  const mainTable = dom.getElementsByTagName('table').item(0)!;
 
   mainTable.classList.add('d-none');
 
@@ -324,7 +331,7 @@ function attachWindowHandlers() {
   });
 }
 
-export = function init(nw, clip, doc, filePath) {
+export = function init(nw: NwWindow, clip: NwClipboard, doc: Document, filePath: string) {
   win = nw;
   clipboard = clip;
   dom = doc;

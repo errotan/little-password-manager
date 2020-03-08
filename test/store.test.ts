@@ -21,7 +21,7 @@ describe('lpm.store', () => {
   });
 
   it('getPasswords() should be array', () => {
-    assert(typeof lpmStore.getPasswords() === 'object');
+    assert(Array.isArray(lpmStore.getPasswords()));
   });
 
   it('open() must throw error if password is incorrect', async () => {

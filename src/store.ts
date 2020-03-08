@@ -2,13 +2,14 @@
 
 import { promises as fs } from 'fs';
 import CryptoJS from 'crypto-js';
+import LPMPasswords from './password';
 
 let storeFilePath = 'passwords.json';
-let mainPassword;
-let passwords;
+let mainPassword: string;
+let passwords: LPMPasswords;
 
-function setFilePath(path) {
-  if (passwords) {
+function setFilePath(path: string): void {
+  if (mainPassword) {
     throw new Error('Close store before changing path!');
   }
 
@@ -41,22 +42,22 @@ async function readPasswordFile() {
   }
 }
 
-function decryptString(string) {
+function decryptString(string: string) {
   return CryptoJS.AES.decrypt(string, mainPassword).toString(CryptoJS.enc.Utf8);
 }
 
-function encryptString(string) {
+function encryptString(string: string) {
   return CryptoJS.AES.encrypt(string, mainPassword).toString();
 }
 
 function passwordValid() {
-  if (typeof passwords.list !== 'undefined' && passwords.list.length) {
+  if (passwords.list.length) {
     return decryptString(passwords.list[0].pw).length !== 0;
   }
   return false;
 }
 
-function decryptEntry(id, index) {
+function decryptEntry(id: number, index: 'un' | 'web' | 'pw') {
   if (passwords.list[id][index].length > 0) {
     passwords.list[id][index] = decryptString(passwords.list[id][index]);
   }
@@ -64,7 +65,7 @@ function decryptEntry(id, index) {
   return passwords.list[id][index];
 }
 
-function encryptEntry(id, index) {
+function encryptEntry(id: number, index: 'un' | 'web' | 'pw') {
   if (passwords.list[id][index].length > 0) {
     passwords.list[id][index] = encryptString(passwords.list[id][index]);
   } else {
@@ -73,7 +74,7 @@ function encryptEntry(id, index) {
 }
 
 // encrypt or decrypt rows
-function processRows(type) {
+function processRows(type: string) {
   for (let i = 0; i < passwords.list.length; i += 1) {
     if (type === 'encrypt') {
       encryptEntry(i, 'web');
@@ -87,7 +88,11 @@ function processRows(type) {
   }
 }
 
-async function open(password) {
+async function open(password: string) {
+  if (password.length < 8) {
+    throw new Error('Password needs to be at least 8 character long!');
+  }
+
   mainPassword = password;
 
   if (await passwordFileExists()) {
@@ -103,7 +108,7 @@ async function open(password) {
       throw new Error('Password invalid!');
     }
   } else {
-    passwords = {};
+    passwords = new LPMPasswords();
   }
 }
 
@@ -135,7 +140,7 @@ async function savePasswords() {
   processRows('decrypt');
 }
 
-async function savePassword(id, web, un, pw) {
+async function savePassword(id: number, web: string, un: string, pw: string) {
   checkOpen();
 
   passwords.list[id].web = web;
@@ -145,7 +150,7 @@ async function savePassword(id, web, un, pw) {
   await savePasswords();
 }
 
-async function deletePassword(id) {
+async function deletePassword(id: number) {
   checkOpen();
 
   passwords.list.splice(id, 1);
@@ -153,12 +158,8 @@ async function deletePassword(id) {
   await savePasswords();
 }
 
-async function addPassword(web, un, pw) {
+async function addPassword(web: string, un: string, pw: string) {
   checkOpen();
-
-  if (passwords.list === undefined) {
-    passwords.list = [];
-  }
 
   passwords.list.push({ web, un, pw });
 
@@ -166,8 +167,8 @@ async function addPassword(web, un, pw) {
 }
 
 function close() {
-  mainPassword = null;
-  passwords = null;
+  mainPassword = '';
+  passwords = new LPMPasswords();
 }
 
 export = {

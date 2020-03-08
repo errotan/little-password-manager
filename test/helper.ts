@@ -12,7 +12,7 @@ async function deleteStoreFile() {
   }
 }
 
-function mutationObserve(targetNode, callback) {
+function mutationObserve(targetNode: HTMLElement, callback: Function) {
   const observer = new window.MutationObserver(() => {
     callback();
     observer.disconnect();

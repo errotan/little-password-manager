@@ -3,14 +3,14 @@
     "target": "es2017",
     "module": "commonjs",
     "outDir": "build",
-    "strict": false,
+    "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
   "include": [
+    "spec/**/*",
     "src/**/*",
     "test/**/*",
-    "nw.d.ts"
   ],
   "exclude": [
     "node_modules",
