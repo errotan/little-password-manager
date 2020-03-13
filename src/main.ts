@@ -126,10 +126,14 @@ function drawPasswordList() {
 function editPassword(element: HTMLElement) {
   const tr = (<HTMLTableRowElement> element.parentElement!.parentElement);
 
-  tr.cells.item(0)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.web}" />`;
-  tr.cells.item(1)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.un}" />`;
-  tr.cells.item(2)!.innerHTML = `<input class="form-control" type="text" value="${tr.dataset.pw}" />`;
+  tr.cells.item(0)!.innerHTML = '<input class="form-control" type="text" />';
+  tr.cells.item(1)!.innerHTML = '<input class="form-control" type="text" />';
+  tr.cells.item(2)!.innerHTML = '<input class="form-control" type="text" />';
   tr.cells.item(3)!.innerHTML = '<i class="icon ion-md-checkmark"></i> <i class="icon ion-md-close"></i>';
+
+  (<HTMLInputElement> tr.cells.item(0)!.children.item(0)).value = <string> tr.dataset.web;
+  (<HTMLInputElement> tr.cells.item(1)!.children.item(0)).value = <string> tr.dataset.un;
+  (<HTMLInputElement> tr.cells.item(2)!.children.item(0)).value = <string> tr.dataset.pw;
 }
 
 // save edited password
