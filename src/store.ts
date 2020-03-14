@@ -180,4 +180,4 @@ export = {
   deletePassword,
   addPassword,
   close,
-}
+};

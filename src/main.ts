@@ -148,7 +148,7 @@ async function saveEditedPassword(element: HTMLElement) {
       <number><unknown> tr.dataset.id,
       input.item(0)!.value,
       input.item(1)!.value,
-      input.item(2)!.value
+      input.item(2)!.value,
     );
     drawPasswordList();
   } else {
@@ -162,7 +162,11 @@ async function deletePassword(element: HTMLElement) {
 
   if ('confirmed' in confirmTarget.dataset) {
     delete confirmTarget.dataset.confirmed;
-    await lpmStore.deletePassword(<number><unknown> element.parentElement!.parentElement!.dataset.id);
+
+    await lpmStore.deletePassword(
+      <number><unknown> element.parentElement!.parentElement!.dataset.id,
+    );
+
     drawPasswordList();
   } else {
     displayQuestion('Do you really want to delete this data?');
@@ -347,4 +351,4 @@ export = function init(nw: NwWindow, clip: NwClipboard, doc: Document, filePath:
   attachWindowHandlers();
   passwordAgainFieldHandler();
   addListeners();
-}
+};

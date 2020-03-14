@@ -3,20 +3,11 @@
 import { strict as assert } from 'assert';
 import { promises as fs } from 'fs';
 import jsdomGlobal from 'jsdom-global';
-import { EventEmitter } from 'events';
 import helper from './helper';
 import lpmMain from '../src/main';
 import { NwWindow, NwClipboard } from '../spec/nw';
-
-class Window extends EventEmitter {
-  maximize() {
-  }
-}
-
-class Clipboard {
-  set(data: string) {
-  }
-}
+import Clipboard from './clipboard';
+import Window from './window';
 
 const windowEmitter = new Window();
 const clipboard = new Clipboard();
