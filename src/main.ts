@@ -75,6 +75,14 @@ function showHidePassword(element: HTMLElement) {
   }
 }
 
+function displayEmptyWarning() {
+  dom.getElementsByClassName('js-empty-warning').item(0)!.classList.remove('d-none');
+}
+
+function hideEmptyWarning() {
+  dom.getElementsByClassName('js-empty-warning').item(0)!.classList.add('d-none');
+}
+
 // draw password list table
 function drawPasswordList() {
   // hide login form
@@ -119,6 +127,12 @@ function drawPasswordList() {
         + '<i class="icon ion-md-create" title="edit"></i> '
         + '<i class="icon ion-md-trash" title="delete"></i>';
     }
+  }
+
+  if (passwords && passwords.length === 0) {
+    displayEmptyWarning();
+  } else {
+    hideEmptyWarning();
   }
 }
 
@@ -184,7 +198,7 @@ async function loginHandler() {
     return;
   }
 
-  if (!await lpmStore.passwordFileExists()) {
+  if (!await lpmStore.passwordFileValid()) {
     const loginPassword2 = <HTMLInputElement> dom.getElementById('loginpassword2');
 
     if (loginPassword.value.length < 8) {
@@ -297,15 +311,15 @@ function addListeners() {
 async function passwordAgainFieldHandler() {
   const passwordDiv = dom.getElementsByClassName('js-password-again').item(0)!;
   const loginSubmit = (<HTMLInputElement> dom.getElementById('loginsubmit'));
-  const passwordFileExists = await lpmStore.passwordFileExists();
+  const passwordFileValid = await lpmStore.passwordFileValid();
 
-  if (passwordFileExists) {
+  if (passwordFileValid) {
     passwordDiv.classList.add('d-none');
   } else {
     passwordDiv.classList.remove('d-none');
   }
 
-  loginSubmit.value = passwordFileExists ? 'Unlock' : 'Create';
+  loginSubmit.value = passwordFileValid ? 'Unlock' : 'Create';
 }
 
 // logout handler

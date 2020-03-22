@@ -16,15 +16,6 @@ function setFilePath(path: string): void {
   storeFilePath = path;
 }
 
-async function passwordFileExists() {
-  try {
-    await fs.access(storeFilePath);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
 // read password file, parse and load to passwords object
 async function readPasswordFile() {
   let data;
@@ -39,6 +30,24 @@ async function readPasswordFile() {
     passwords = JSON.parse(data);
   } catch (e) {
     throw new Error('Fatal error! Password file is corrupted!');
+  }
+}
+
+async function passwordFileValid() {
+  try {
+    await fs.access(storeFilePath);
+    if (!mainPassword) {
+      await readPasswordFile();
+    }
+
+    if (passwords && passwords.list && passwords.list.length) {
+      return true;
+    }
+
+    await fs.unlink(storeFilePath);
+    return false;
+  } catch (error) {
+    return false;
   }
 }
 
@@ -95,7 +104,7 @@ async function open(password: string) {
 
   mainPassword = password;
 
-  if (await passwordFileExists()) {
+  if (await passwordFileValid()) {
     await readPasswordFile();
 
     try {
@@ -173,7 +182,7 @@ function close() {
 
 export = {
   setFilePath,
-  passwordFileExists,
+  passwordFileValid,
   open,
   getPasswords,
   savePassword,

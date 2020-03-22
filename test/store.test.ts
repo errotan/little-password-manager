@@ -17,7 +17,7 @@ describe('lpm.store', () => {
 
   it('addPassword() should create store file', async () => {
     await lpmStore.addPassword('web', 'un', 'pw');
-    assert(await lpmStore.passwordFileExists());
+    assert(await lpmStore.passwordFileValid());
   });
 
   it('getPasswords() should be array', () => {
