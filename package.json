@@ -22,7 +22,7 @@
     "bootstrap": "^4.4.1",
     "crypto-js": "^3.3.0",
     "ionicons": "^4.6.3",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "nw": "^0.44.4",
     "popper.js": "^1.16.1"
   },
