@@ -44,7 +44,7 @@ describe('lpm.main', () => {
     );
   });
 
-  it('adding entry creates row', () => {
+  it('adding entry creates row', (done) => {
     const inputs = document.getElementsByClassName('form-control');
     const table = document.getElementsByTagName('table').item(0)!;
 
@@ -55,6 +55,7 @@ describe('lpm.main', () => {
 
     helper.mutationObserve(table, () => {
       assert.strictEqual(table.getElementsByTagName('tr').length, 3);
+      done();
     });
   });
 
